@@ -106,11 +106,21 @@ public class TokenMgrError extends Error
    */
   protected static String LexicalError(boolean EOFSeen, int lexState, int errorLine, int errorColumn, String errorAfter, char curChar) {
 	if(lexState==JasonGrammarConstants.COMMENT && EOFSeen) {
-		return "Encontrado EOF prematuro: abertura de comentário de bloco sem fechamento.\n";
+		return "ERRO: Encontrado EOF prematuro - abertura de comentário de bloco sem fechamento.\n";
+		
+	} else if(lexState==JasonGrammarConstants.DOUBLECOMMENT && EOFSeen) {
+		return "ERRO: Encontrado comentário dentro de comentário.\n";
+		
+	} else if(lexState==JasonGrammarConstants.STR && EOFSeen) {
+		return "ERRO: Encontrado EOF prematuro - abertura de string sem fechamento.\n";
+		
+	} else if(lexState==JasonGrammarConstants.STR) {
+		return("ERRO: String não fechada na linha "+errorLine+", coluna "+errorColumn+".\n");
+		
+	} else {
+		String encountered = (EOFSeen ? "<EOF>" : ("\"" + addEscapes(String.valueOf(curChar)) + "\"") + " - " + (int)curChar);
+	    return("Caractere inválido ("+encountered+") encontrado na linha "+errorLine+", coluna "+errorColumn+".\n");
 	}
-	String encountered = (EOFSeen ? "<EOF> " : ("\"" + addEscapes(String.valueOf(curChar)) + "\"") + " (" + (int)curChar + ")");
-    return("Erro léxico na linha "+errorLine+", coluna "+errorColumn+".\n"
-    		+ "Encontrado: " + encountered + ".");
   }
 
   /**

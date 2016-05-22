@@ -148,9 +148,13 @@ public class JasonGrammar implements JasonGrammarConstants {
       t = jj_consume_token(IDENTIFIER);
                           print(t, "IDENTIFIER");
       break;
-    case NUMERIC_LITERAL:
-      t = jj_consume_token(NUMERIC_LITERAL);
-                         print(t, "NUMERIC_LITERAL");
+    case REAL_LITERAL:
+      t = jj_consume_token(REAL_LITERAL);
+                      print(t, "REAL_LITERAL");
+      break;
+    case INTEGER_LITERAL:
+      t = jj_consume_token(INTEGER_LITERAL);
+                         print(t, "INTEGER_LITERAL");
       break;
     case STRING_LITERAL:
       t = jj_consume_token(STRING_LITERAL);
@@ -260,15 +264,20 @@ public class JasonGrammar implements JasonGrammarConstants {
   static final private int[] jj_la1 = new int[1];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
+  static private int[] jj_la1_2;
   static {
       jj_la1_init_0();
       jj_la1_init_1();
+      jj_la1_init_2();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0xffffff01,};
+      jj_la1_0 = new int[] {0xfffffc01,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x7fffff1f,};
+      jj_la1_1 = new int[] {0xfffff0ff,};
+   }
+   private static void jj_la1_init_2() {
+      jj_la1_2 = new int[] {0x7,};
    }
 
   /** Constructor with InputStream. */
@@ -406,7 +415,7 @@ public class JasonGrammar implements JasonGrammarConstants {
   /** Generate ParseException. */
   static public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[63];
+    boolean[] la1tokens = new boolean[67];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
@@ -420,10 +429,13 @@ public class JasonGrammar implements JasonGrammarConstants {
           if ((jj_la1_1[i] & (1<<j)) != 0) {
             la1tokens[32+j] = true;
           }
+          if ((jj_la1_2[i] & (1<<j)) != 0) {
+            la1tokens[64+j] = true;
+          }
         }
       }
     }
-    for (int i = 0; i < 63; i++) {
+    for (int i = 0; i < 67; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;

@@ -11,120 +11,124 @@ public interface JasonGrammarConstants {
   /** End of File. */
   int EOF = 0;
   /** RegularExpression Id. */
-  int ARRAY = 8;
+  int ARRAY = 10;
   /** RegularExpression Id. */
-  int ENDWHILE = 9;
+  int ENDWHILE = 11;
   /** RegularExpression Id. */
-  int PROGRAM = 10;
+  int PROGRAM = 12;
   /** RegularExpression Id. */
-  int BEGIN = 11;
+  int BEGIN = 13;
   /** RegularExpression Id. */
-  int FUNCTION = 12;
+  int FUNCTION = 14;
   /** RegularExpression Id. */
-  int READ = 13;
+  int READ = 15;
   /** RegularExpression Id. */
-  int THEN = 14;
+  int THEN = 16;
   /** RegularExpression Id. */
-  int CALL = 15;
+  int CALL = 17;
   /** RegularExpression Id. */
-  int IF = 16;
+  int IF = 18;
   /** RegularExpression Id. */
-  int REAL = 17;
+  int REAL = 19;
   /** RegularExpression Id. */
-  int TYPES = 18;
+  int TYPES = 20;
   /** RegularExpression Id. */
-  int DO = 19;
+  int DO = 21;
   /** RegularExpression Id. */
-  int INTEGER = 20;
+  int INTEGER = 22;
   /** RegularExpression Id. */
-  int RECORD = 21;
+  int RECORD = 23;
   /** RegularExpression Id. */
-  int UNTIL = 22;
+  int UNTIL = 24;
   /** RegularExpression Id. */
-  int ELSE = 23;
+  int ELSE = 25;
   /** RegularExpression Id. */
-  int PARAMETERS = 24;
+  int PARAMETERS = 26;
   /** RegularExpression Id. */
-  int RETURN = 25;
+  int RETURN = 27;
   /** RegularExpression Id. */
-  int VARIABLES = 26;
+  int VARIABLES = 28;
   /** RegularExpression Id. */
-  int END = 27;
+  int END = 29;
   /** RegularExpression Id. */
-  int SET = 28;
+  int SET = 30;
   /** RegularExpression Id. */
-  int WHILE = 29;
+  int WHILE = 31;
   /** RegularExpression Id. */
-  int ENDIF = 30;
+  int ENDIF = 32;
   /** RegularExpression Id. */
-  int PROCEDURE = 31;
+  int PROCEDURE = 33;
   /** RegularExpression Id. */
-  int STRING = 32;
+  int STRING = 34;
   /** RegularExpression Id. */
-  int WRITE = 33;
+  int WRITE = 35;
   /** RegularExpression Id. */
-  int ENDUNTIL = 34;
+  int ENDUNTIL = 36;
   /** RegularExpression Id. */
-  int RETURNS = 35;
+  int RETURNS = 37;
   /** RegularExpression Id. */
-  int VAR = 36;
+  int VAR = 38;
   /** RegularExpression Id. */
-  int DIGIT = 37;
+  int STRING_LITERAL = 39;
   /** RegularExpression Id. */
-  int LETTER = 38;
+  int DIGIT = 42;
   /** RegularExpression Id. */
-  int ANY_CHARACTER = 39;
+  int LETTER = 43;
   /** RegularExpression Id. */
-  int IDENTIFIER = 40;
+  int IDENTIFIER = 44;
   /** RegularExpression Id. */
-  int NUMERIC_LITERAL = 41;
+  int REAL_LITERAL = 45;
   /** RegularExpression Id. */
-  int STRING_LITERAL = 42;
+  int INTEGER_LITERAL = 46;
   /** RegularExpression Id. */
-  int DOT = 43;
+  int DOT = 47;
   /** RegularExpression Id. */
-  int SEMICOLON = 44;
+  int SEMICOLON = 48;
   /** RegularExpression Id. */
-  int COMMA = 45;
+  int COMMA = 49;
   /** RegularExpression Id. */
-  int PARENT_OPEN = 46;
+  int PARENT_OPEN = 50;
   /** RegularExpression Id. */
-  int PARENT_CLOSE = 47;
+  int PARENT_CLOSE = 51;
   /** RegularExpression Id. */
-  int EQUAL = 48;
+  int EQUAL = 52;
   /** RegularExpression Id. */
-  int LESS = 49;
+  int LESS = 53;
   /** RegularExpression Id. */
-  int LESS_E = 50;
+  int LESS_E = 54;
   /** RegularExpression Id. */
-  int GREATER = 51;
+  int GREATER = 55;
   /** RegularExpression Id. */
-  int GREATER_E = 52;
+  int GREATER_E = 56;
   /** RegularExpression Id. */
-  int NEQUAL = 53;
+  int NEQUAL = 57;
   /** RegularExpression Id. */
-  int PLUS = 54;
+  int PLUS = 58;
   /** RegularExpression Id. */
-  int MINUS = 55;
+  int MINUS = 59;
   /** RegularExpression Id. */
-  int MULT = 56;
+  int MULT = 60;
   /** RegularExpression Id. */
-  int DIV = 57;
+  int DIV = 61;
   /** RegularExpression Id. */
-  int AND = 58;
+  int AND = 62;
   /** RegularExpression Id. */
-  int BACKSLASH = 59;
+  int BACKSLASH = 63;
   /** RegularExpression Id. */
-  int NOT = 60;
+  int NOT = 64;
   /** RegularExpression Id. */
-  int BRACKETS_OPEN = 61;
+  int BRACKETS_OPEN = 65;
   /** RegularExpression Id. */
-  int BRACKETS_CLOSE = 62;
+  int BRACKETS_CLOSE = 66;
 
   /** Lexical state. */
   int DEFAULT = 0;
   /** Lexical state. */
   int COMMENT = 1;
+  /** Lexical state. */
+  int DOUBLECOMMENT = 2;
+  /** Lexical state. */
+  int STR = 3;
 
   /** Literal token values. */
   String[] tokenImage = {
@@ -135,7 +139,9 @@ public interface JasonGrammarConstants {
     "\"\\n\"",
     "\"/*\"",
     "\"*/\"",
-    "<token of kind 7>",
+    "\"/*\"",
+    "<token of kind 8>",
+    "<token of kind 9>",
     "\"array\"",
     "\"endwhile\"",
     "\"program\"",
@@ -165,12 +171,14 @@ public interface JasonGrammarConstants {
     "\"enduntil\"",
     "\"returns\"",
     "\"var\"",
+    "\"\\\"\"",
+    "<token of kind 40>",
+    "\"\\\"\"",
     "<DIGIT>",
     "<LETTER>",
-    "<ANY_CHARACTER>",
     "<IDENTIFIER>",
-    "<NUMERIC_LITERAL>",
-    "<STRING_LITERAL>",
+    "<REAL_LITERAL>",
+    "<INTEGER_LITERAL>",
     "\".\"",
     "\";\"",
     "\",\"",

@@ -25,16 +25,21 @@ public class JasonGrammar {
 	}
   }PARSER_END(JasonGrammar)SKIP: {
   " " | "\r" | "\t" | "\n"
+| "/*" : COMMENT
 }
-
-SKIP: {  "/*" : COMMENT}
 
 < COMMENT > SKIP : {
   "*/" : DEFAULT
+| "/*" : DOUBLECOMMENT
 }
 
 < COMMENT > MORE : {
-  < ~[] >}TOKEN : { /* KEYWORDS */  < ARRAY  : "array" >
+  < ~[] >
+}
+
+< DOUBLECOMMENT > MORE : {
+  < ~[] >
+}TOKEN : { /* KEYWORDS */  < ARRAY  : "array" >
 | < ENDWHILE  : "endwhile" >
 | < PROGRAM  : "program" >
 | < BEGIN  : "begin" >
@@ -63,13 +68,22 @@ SKIP: {  "/*" : COMMENT}
 | < ENDUNTIL  : "enduntil" >
 | < RETURNS  : "returns" >
 | < VAR  : "var" >}
+
+< STR > TOKEN : {	< STRING_LITERAL : "\"" > : DEFAULT
+}
+
+< STR > MORE : {
+  < ~["\n", "\r"] >
+}
+
+MORE : {
+  "\"" : STR}
 TOKEN : { /* OTHER TOKENS */
   < #DIGIT : [ "0"-"9" ] >
 | < #LETTER : [ "a"-"z" ] | [ "A"-"Z" ] >
-| < #ANY_CHARACTER : ~["\""] >
 | < IDENTIFIER : < LETTER > (< LETTER > | < DIGIT >)* >
-| < NUMERIC_LITERAL : (< DIGIT >)+ "." (< DIGIT >)+ | (< DIGIT >)+ >
-| < STRING_LITERAL : "\"" (< ANY_CHARACTER >)* "\"" >
+| < REAL_LITERAL : (< DIGIT >)+ < DOT > | < DOT > (< DIGIT >)+ | (< DIGIT >)+ < DOT > (< DIGIT >)+  >
+| < INTEGER_LITERAL : (< DIGIT >)+ >
 | < DOT  : "." >
 | < SEMICOLON : ";" >
 | < COMMA  : "," >
@@ -126,7 +140,8 @@ void lexical() throws TokenMgrError, ParseException :
 | t=< RETURNS >		{ print(t, "RETURNS"); }
 | t=< VAR >			{ print(t, "VAR"); }
 | t=< IDENTIFIER >	{ print(t, "IDENTIFIER"); }
-| t=< NUMERIC_LITERAL >{ print(t, "NUMERIC_LITERAL"); }
+| t=< REAL_LITERAL >{ print(t, "REAL_LITERAL"); }
+| t=< INTEGER_LITERAL >{ print(t, "INTEGER_LITERAL"); }
 | t=< STRING_LITERAL >{ print(t, "STRING_LITERAL"); }
 | t=< DOT >			{ print(t, "DOT"); }
 | t=< SEMICOLON >	{ print(t, "SEMICOLON"); }

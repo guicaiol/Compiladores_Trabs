@@ -12,18 +12,44 @@
  options{  static = true;
   ignore_case = true;}PARSER_BEGIN(JasonGrammar)package jason;
 
-public class JasonGrammar{  public static void main(String args []) throws ParseException  {    JasonGrammar parser = new JasonGrammar(System.in);    while (true)    {      System.out.println("Reading from standard input...");      System.out.print("Enter a Jason code:\n");      try      {        switch (JasonGrammar.program())        {          case 0 :           	System.out.println("OK.");          break;          case 1 :           	System.out.println("Goodbye.");          break;          default :           break;        }      }      catch (Exception e)      {        System.out.println("NOK.");        System.out.println(e.getMessage());        JasonGrammar.ReInit(System.in);      }      catch (Error e)      {        System.out.println("Oops.");        System.out.println(e.getMessage());        break;      }    }  }}PARSER_END(JasonGrammar)SKIP : /* SKIPS */{  " "| "\r"| "\t"| "\n"
-| "/*" : COMMENT}
-
-< COMMENT > SKIP : /* COMMENT SKIP */
-{
-  "*/" : DEFAULT
-  //< EOF > : ERROR
+public class JasonGrammar {
+  
+	public static void main(String args []) throws ParseException {
+	    JasonGrammar parser = new JasonGrammar(System.in);
+	    
+		while(true) {
+			try {
+				parser.program();
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+				break;
+			} catch (Error e) {
+				System.out.println(e.getMessage());
+				break;
+			}
+	    }
+	}
+  
+}PARSER_END(JasonGrammar)SKIP: {
+  " " | "\r" | "\t" | "\n"
+| "/*" : COMMENT
 }
 
-< COMMENT > MORE : /* COMMENT MORE */
-{
-  < ~[] >}TOKEN : /* KEYWORDS */{  < ARRAY  : "array" >
+< COMMENT > SKIP : {
+  "*/" : DEFAULT
+| "/*" : DOUBLECOMMENT
+}
+
+< COMMENT > MORE : {
+  < ~[] >
+}
+
+< DOUBLECOMMENT > MORE : {
+  < ~[] >
+}
+
+TOKEN : { /* KEYWORDS */
+  < ARRAY  : "array" >
 | < ENDWHILE  : "endwhile" >
 | < PROGRAM  : "program" >
 | < BEGIN  : "begin" >
@@ -51,14 +77,27 @@ public class JasonGrammar{  public static void main(String args []) throws Par
 | < WRITE  : "write" >
 | < ENDUNTIL  : "enduntil" >
 | < RETURNS  : "returns" >
-| < VAR  : "var" >}
-TOKEN : /* OTHER TOKENS */{
+| < VAR  : "var" >
+}
+
+< STR > TOKEN : {
+	< STRING_LITERAL : "\"" > : DEFAULT
+}
+
+< STR > MORE : {
+  < ~["\n", "\r"] >
+}
+
+MORE : {
+  "\"" : STR
+}
+
+TOKEN : { /* OTHER TOKENS */
   < #DIGIT : [ "0"-"9" ] >
 | < #LETTER : [ "a"-"z" ] | [ "A"-"Z" ] >
-| < #ANY_CHARACTER : ~["\""] >
 | < IDENTIFIER : < LETTER > (< LETTER > | < DIGIT >)* >
-| < NUMERIC_LITERAL : (< DIGIT >)+ "." (< DIGIT >)+ | (< DIGIT >)+ >
-| < STRING_LITERAL : "\"" (< ANY_CHARACTER >)* "\"" >
+| < REAL_LITERAL : (< DIGIT >)+ < DOT > | < DOT > (< DIGIT >)+ | (< DIGIT >)+ < DOT > (< DIGIT >)+  >
+| < INTEGER_LITERAL : (< DIGIT >)+ >
 | < DOT  : "." >
 | < SEMICOLON : ";" >
 | < COMMA  : "," >
@@ -66,7 +105,9 @@ public class JasonGrammar{  public static void main(String args []) throws Par
 | < PARENT_CLOSE : ")" >
 | < EQUAL : "=" >
 | < LESS : "<" >
+| < LESS_E : "<=" >
 | < GREATER : ">" >
+| < GREATER_E : ">=" >
 | < NEQUAL : "!" >
 | < PLUS : "+" >
 | < MINUS : "-" >
@@ -76,7 +117,8 @@ public class JasonGrammar{  public static void main(String args []) throws Par
 | < BACKSLASH : "\\" >
 | < NOT : "~" >
 | < BRACKETS_OPEN : "[" >
-| < BRACKETS_CLOSE : "]" >}int program() :{}{
+| < BRACKETS_CLOSE : "]" >
+}int program() :{}{
   header() declSec() block() < DOT >  {    return 0;  }| < DOT >  {    return 1;  }}
 
 void header() :
@@ -118,7 +160,7 @@ void typeSpecification() :
 
 void arraySpecification() :
 {}
-{  < ARRAY > dataType() < BRACKETS_OPEN > < NUMERIC_LITERAL > < BRACKETS_CLOSE > < SEMICOLON > 
+{  < ARRAY > dataType() < BRACKETS_OPEN > (< INTEGER_LITERAL > | < REAL_LITERAL >) < BRACKETS_CLOSE > < SEMICOLON > 
 }
 
 void recordSpecification() :
@@ -335,7 +377,8 @@ void factor() :
 {}
 {
   < IDENTIFIER > (argList() | variableNI())
-| < NUMERIC_LITERAL >
+| < INTEGER_LITERAL >
+| < REAL_LITERAL >
 | < STRING_LITERAL >
 | < NOT > factor()
 | < PARENT_OPEN > condition() < PARENT_CLOSE >
