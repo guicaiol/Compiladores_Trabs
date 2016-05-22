@@ -1,0 +1,3 @@
+program MenorProgramaSemEnd;
+begin
+.

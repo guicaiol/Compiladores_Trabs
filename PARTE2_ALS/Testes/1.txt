@@ -1,0 +1,44 @@
+program Identificacao; /*Testando tipos de dados : record vs. array*/
+
+types
+    nomeInteiro array string[2];
+    id record 
+        nomeInteiro Nome;
+        integer Idade;
+        real Nota;
+        string Endereco;
+    end;
+variables
+    string primeiroNome;
+    string segundoNome;
+    integer idade;
+    real nota;
+    string endereco;
+    id sandra;
+    id luiz;
+function makeID returns id;
+    parameters
+        string first;
+        string last;
+        integer age;
+        real grade;
+        string address;
+    variables
+        id identification;
+    begin
+        set identification.Nome[0] = first;
+        set identification.Nome[1] = last;
+        set identification.Idade = age;
+        set identification.Nota = grade;
+        set identification.Endereco = address;
+        return (identification)
+    end;
+begin
+    set primeiroNome = "Sandra";
+    set segundoNome = "Aluisio";
+    set idade = 45;
+    set nota = 9.;
+    set endereco = "USP";
+    set sandra = makeID (primeiroNome, segundoNome, idade, nota, endereco);
+    set luiz = makeID ("Luiz", "Votto", 22, .4, "Santos")
+end.

@@ -1,0 +1,17 @@
+program DeclSec;
+
+procedure procedure1;
+begin
+    set t1 = 10;
+    set t2 = 1;
+    read t2    
+end;
+    
+function function1 returns integer;
+begin
+    ; return (1)
+end;
+
+begin
+    set a = 1
+end.

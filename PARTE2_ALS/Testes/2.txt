@@ -1,0 +1,28 @@
+program RecordsAndArrays1;
+    types
+        array1 array string[2];
+        array2 array real[4];
+        record1 record
+            real a1;
+            integer a2;
+            array1 stringArray;
+        end;
+        record2 record
+            record1 r1;
+            integer i1;
+        end;
+    variables
+        record2 rec2;
+        record1 rec1;
+        integer pointer;
+begin
+    set rec1.a1 = .0;
+    set rec1.a2 = 4;
+    set rec1.stringArray[0] =  "first";
+    set rec1.stringArray[1] = "last";
+    set rec2.r1 = rec1;
+    set rec2.i1 = 0;
+    set pointer = 1;
+    set rec2.i1 = pointer;
+    write rec2.rec1.stringArray[rec2.i1]
+end.

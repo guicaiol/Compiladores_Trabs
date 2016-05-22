@@ -1,0 +1,39 @@
+program DeclSec;
+    types
+        type1 array integer[2];
+        type2 record
+            type1 array1;
+            integer int;
+        end;
+        
+    variables
+        type1 t1;
+        type2 t2;
+        string s1;
+        
+    procedure proc;
+        parameters
+            type1 tt1;
+            real r1;
+            
+        types
+            insidetype array type2[10];
+        variables
+            real insider2;
+        procedure insideproc;
+            begin
+                set insider2 = .2
+            end;
+    begin
+       set t1.int = 0;
+    end;
+    function function1 returns integer;
+        parameters
+            integer a;
+        begin
+            ; return(a+1)
+        end;
+begin
+    call proc (t1, .4);
+    set t1.int = function1(t1.int)
+end.

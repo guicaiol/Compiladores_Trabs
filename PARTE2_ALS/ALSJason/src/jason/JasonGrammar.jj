@@ -19,7 +19,10 @@ public class JasonGrammar {
 	    
 		while(true) {
 			try {
-				parser.program();
+				if(parser.program()==0) {
+				  	System.out.println("SUCESSO!\n");
+					break;
+				}
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 				break;
@@ -119,7 +122,7 @@ TOKEN : { /* OTHER TOKENS */
 | < BRACKETS_OPEN : "[" >
 | < BRACKETS_CLOSE : "]" >
 }int program() :{}{
-  header() declSec() block() < DOT >  {    return 0;  }| < DOT >  {    return 1;  }}
+  header() declSec() block() < DOT >  {    return 0;  }}
 
 void header() :
 {}
@@ -266,13 +269,21 @@ void functionHeader() :
 
 void functionBlock() :
 {}
-{  < BEGIN > statements() returnStatement() < END >
+{
+	< BEGIN > functionStatements() < END >
+}
+
+void functionStatements() :
+{}
+{
+  statement() < SEMICOLON > (functionStatements() | returnStatement())
+| < SEMICOLON > returnStatement()
 }
 
 void statements() :
 {}
 {
-  [statement() < SEMICOLON > statements()] 
+  [statement() [< SEMICOLON > statements()]] 
 }
 
 void statement() :
@@ -292,7 +303,8 @@ void elseClause() :{}
 
 void returnStatement() :
 {}
-{  < SEMICOLON > < RETURN > condition()
+{
+  < RETURN > < PARENT_OPEN > condition() < PARENT_CLOSE >
 }
 
 void argList() :

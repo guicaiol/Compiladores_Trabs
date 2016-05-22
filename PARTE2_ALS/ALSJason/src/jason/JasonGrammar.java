@@ -8,7 +8,10 @@ public class JasonGrammar implements JasonGrammarConstants {
 
                 while(true) {
                         try {
-                                parser.program();
+                                if(parser.program()==0) {
+                                        System.out.println("SUCESSO!\u005cn");
+                                        break;
+                                }
                         } catch (Exception e) {
                                 System.out.println(e.getMessage());
                                 break;
@@ -20,23 +23,11 @@ public class JasonGrammar implements JasonGrammarConstants {
         }
 
   static final public int program() throws ParseException {
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case PROGRAM:
-      header();
-      declSec();
-      block();
-      jj_consume_token(DOT);
+    header();
+    declSec();
+    block();
+    jj_consume_token(DOT);
     {if (true) return 0;}
-      break;
-    case DOT:
-      jj_consume_token(DOT);
-    {if (true) return 1;}
-      break;
-    default:
-      jj_la1[0] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
     throw new Error("Missing return statement in function");
   }
 
@@ -58,7 +49,7 @@ public class JasonGrammar implements JasonGrammarConstants {
       typeDeclSec();
       break;
     default:
-      jj_la1[1] = jj_gen;
+      jj_la1[0] = jj_gen;
       ;
     }
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -66,7 +57,7 @@ public class JasonGrammar implements JasonGrammarConstants {
       varDeclSec();
       break;
     default:
-      jj_la1[2] = jj_gen;
+      jj_la1[1] = jj_gen;
       ;
     }
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -75,7 +66,7 @@ public class JasonGrammar implements JasonGrammarConstants {
       subProgramDecls();
       break;
     default:
-      jj_la1[3] = jj_gen;
+      jj_la1[2] = jj_gen;
       ;
     }
   }
@@ -92,7 +83,7 @@ public class JasonGrammar implements JasonGrammarConstants {
       typeDecls();
       break;
     default:
-      jj_la1[4] = jj_gen;
+      jj_la1[3] = jj_gen;
       ;
     }
   }
@@ -111,7 +102,7 @@ public class JasonGrammar implements JasonGrammarConstants {
       recordSpecification();
       break;
     default:
-      jj_la1[5] = jj_gen;
+      jj_la1[4] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -129,7 +120,7 @@ public class JasonGrammar implements JasonGrammarConstants {
       jj_consume_token(REAL_LITERAL);
       break;
     default:
-      jj_la1[6] = jj_gen;
+      jj_la1[5] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -159,7 +150,7 @@ public class JasonGrammar implements JasonGrammarConstants {
       varDecls();
       break;
     default:
-      jj_la1[7] = jj_gen;
+      jj_la1[6] = jj_gen;
       ;
     }
   }
@@ -185,7 +176,7 @@ public class JasonGrammar implements JasonGrammarConstants {
       jj_consume_token(STRING);
       break;
     default:
-      jj_la1[8] = jj_gen;
+      jj_la1[7] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -198,7 +189,7 @@ public class JasonGrammar implements JasonGrammarConstants {
       idList2();
       break;
     default:
-      jj_la1[9] = jj_gen;
+      jj_la1[8] = jj_gen;
       ;
     }
   }
@@ -211,7 +202,7 @@ public class JasonGrammar implements JasonGrammarConstants {
       idList2();
       break;
     default:
-      jj_la1[10] = jj_gen;
+      jj_la1[9] = jj_gen;
       ;
     }
   }
@@ -224,7 +215,7 @@ public class JasonGrammar implements JasonGrammarConstants {
       subProgramDecls();
       break;
     default:
-      jj_la1[11] = jj_gen;
+      jj_la1[10] = jj_gen;
       ;
     }
   }
@@ -238,7 +229,7 @@ public class JasonGrammar implements JasonGrammarConstants {
       functionDecl();
       break;
     default:
-      jj_la1[12] = jj_gen;
+      jj_la1[11] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -263,7 +254,7 @@ public class JasonGrammar implements JasonGrammarConstants {
       paramDeclSec();
       break;
     default:
-      jj_la1[13] = jj_gen;
+      jj_la1[12] = jj_gen;
       ;
     }
     declSec();
@@ -285,7 +276,7 @@ public class JasonGrammar implements JasonGrammarConstants {
       paramDecls2();
       break;
     default:
-      jj_la1[14] = jj_gen;
+      jj_la1[13] = jj_gen;
       ;
     }
   }
@@ -301,7 +292,7 @@ public class JasonGrammar implements JasonGrammarConstants {
       paramDecls2();
       break;
     default:
-      jj_la1[15] = jj_gen;
+      jj_la1[14] = jj_gen;
       ;
     }
   }
@@ -322,7 +313,7 @@ public class JasonGrammar implements JasonGrammarConstants {
       jj_consume_token(IDENTIFIER);
       break;
     default:
-      jj_la1[16] = jj_gen;
+      jj_la1[15] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -345,9 +336,50 @@ public class JasonGrammar implements JasonGrammarConstants {
 
   static final public void functionBlock() throws ParseException {
     jj_consume_token(BEGIN);
-    statements();
-    returnStatement();
+    functionStatements();
     jj_consume_token(END);
+  }
+
+  static final public void functionStatements() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case READ:
+    case CALL:
+    case IF:
+    case UNTIL:
+    case SET:
+    case WHILE:
+    case WRITE:
+      statement();
+      jj_consume_token(SEMICOLON);
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case READ:
+      case CALL:
+      case IF:
+      case UNTIL:
+      case SET:
+      case WHILE:
+      case WRITE:
+      case SEMICOLON:
+        functionStatements();
+        break;
+      case RETURN:
+        returnStatement();
+        break;
+      default:
+        jj_la1[16] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+      break;
+    case SEMICOLON:
+      jj_consume_token(SEMICOLON);
+      returnStatement();
+      break;
+    default:
+      jj_la1[17] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
   }
 
   static final public void statements() throws ParseException {
@@ -360,11 +392,18 @@ public class JasonGrammar implements JasonGrammarConstants {
     case WHILE:
     case WRITE:
       statement();
-      jj_consume_token(SEMICOLON);
-      statements();
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case SEMICOLON:
+        jj_consume_token(SEMICOLON);
+        statements();
+        break;
+      default:
+        jj_la1[18] = jj_gen;
+        ;
+      }
       break;
     default:
-      jj_la1[17] = jj_gen;
+      jj_la1[19] = jj_gen;
       ;
     }
   }
@@ -414,12 +453,12 @@ public class JasonGrammar implements JasonGrammarConstants {
         argList();
         break;
       default:
-        jj_la1[18] = jj_gen;
+        jj_la1[20] = jj_gen;
         ;
       }
       break;
     default:
-      jj_la1[19] = jj_gen;
+      jj_la1[21] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -432,16 +471,17 @@ public class JasonGrammar implements JasonGrammarConstants {
       statements();
       break;
     default:
-      jj_la1[20] = jj_gen;
+      jj_la1[22] = jj_gen;
       ;
     }
     jj_consume_token(ENDIF);
   }
 
   static final public void returnStatement() throws ParseException {
-    jj_consume_token(SEMICOLON);
     jj_consume_token(RETURN);
+    jj_consume_token(PARENT_OPEN);
     condition();
+    jj_consume_token(PARENT_CLOSE);
   }
 
   static final public void argList() throws ParseException {
@@ -457,7 +497,7 @@ public class JasonGrammar implements JasonGrammarConstants {
       arguments2();
       break;
     default:
-      jj_la1[21] = jj_gen;
+      jj_la1[23] = jj_gen;
       ;
     }
   }
@@ -470,7 +510,7 @@ public class JasonGrammar implements JasonGrammarConstants {
       arguments2();
       break;
     default:
-      jj_la1[22] = jj_gen;
+      jj_la1[24] = jj_gen;
       ;
     }
   }
@@ -482,7 +522,7 @@ public class JasonGrammar implements JasonGrammarConstants {
       condition2();
       break;
     default:
-      jj_la1[23] = jj_gen;
+      jj_la1[25] = jj_gen;
       ;
     }
   }
@@ -495,7 +535,7 @@ public class JasonGrammar implements JasonGrammarConstants {
       condition2();
       break;
     default:
-      jj_la1[24] = jj_gen;
+      jj_la1[26] = jj_gen;
       ;
     }
   }
@@ -507,7 +547,7 @@ public class JasonGrammar implements JasonGrammarConstants {
       compoundCondition2();
       break;
     default:
-      jj_la1[25] = jj_gen;
+      jj_la1[27] = jj_gen;
       ;
     }
   }
@@ -520,7 +560,7 @@ public class JasonGrammar implements JasonGrammarConstants {
       compoundCondition2();
       break;
     default:
-      jj_la1[26] = jj_gen;
+      jj_la1[28] = jj_gen;
       ;
     }
   }
@@ -536,7 +576,7 @@ public class JasonGrammar implements JasonGrammarConstants {
       expression();
       break;
     default:
-      jj_la1[27] = jj_gen;
+      jj_la1[29] = jj_gen;
       ;
     }
   }
@@ -549,7 +589,7 @@ public class JasonGrammar implements JasonGrammarConstants {
       expression2();
       break;
     default:
-      jj_la1[28] = jj_gen;
+      jj_la1[30] = jj_gen;
       ;
     }
   }
@@ -563,7 +603,7 @@ public class JasonGrammar implements JasonGrammarConstants {
       expression2();
       break;
     default:
-      jj_la1[29] = jj_gen;
+      jj_la1[31] = jj_gen;
       ;
     }
   }
@@ -576,7 +616,7 @@ public class JasonGrammar implements JasonGrammarConstants {
       term2();
       break;
     default:
-      jj_la1[30] = jj_gen;
+      jj_la1[32] = jj_gen;
       ;
     }
   }
@@ -590,7 +630,7 @@ public class JasonGrammar implements JasonGrammarConstants {
       term2();
       break;
     default:
-      jj_la1[31] = jj_gen;
+      jj_la1[33] = jj_gen;
       ;
     }
   }
@@ -614,7 +654,7 @@ public class JasonGrammar implements JasonGrammarConstants {
       factor();
       break;
     default:
-      jj_la1[32] = jj_gen;
+      jj_la1[34] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -629,7 +669,7 @@ public class JasonGrammar implements JasonGrammarConstants {
         argList();
         break;
       default:
-        jj_la1[33] = jj_gen;
+        jj_la1[35] = jj_gen;
         variableNI();
       }
       break;
@@ -652,35 +692,13 @@ public class JasonGrammar implements JasonGrammarConstants {
       jj_consume_token(PARENT_CLOSE);
       break;
     default:
-      jj_la1[34] = jj_gen;
+      jj_la1[36] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
   }
 
   static final public void variableNI() throws ParseException {
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case BRACKETS_OPEN:
-      jj_consume_token(BRACKETS_OPEN);
-      expression();
-      jj_consume_token(BRACKETS_CLOSE);
-      break;
-    default:
-      jj_la1[35] = jj_gen;
-      ;
-    }
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case DOT:
-      variable2();
-      break;
-    default:
-      jj_la1[36] = jj_gen;
-      ;
-    }
-  }
-
-  static final public void variable() throws ParseException {
-    jj_consume_token(IDENTIFIER);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case BRACKETS_OPEN:
       jj_consume_token(BRACKETS_OPEN);
@@ -697,6 +715,28 @@ public class JasonGrammar implements JasonGrammarConstants {
       break;
     default:
       jj_la1[38] = jj_gen;
+      ;
+    }
+  }
+
+  static final public void variable() throws ParseException {
+    jj_consume_token(IDENTIFIER);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case BRACKETS_OPEN:
+      jj_consume_token(BRACKETS_OPEN);
+      expression();
+      jj_consume_token(BRACKETS_CLOSE);
+      break;
+    default:
+      jj_la1[39] = jj_gen;
+      ;
+    }
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case DOT:
+      variable2();
+      break;
+    default:
+      jj_la1[40] = jj_gen;
       ;
     }
   }
@@ -721,7 +761,7 @@ public class JasonGrammar implements JasonGrammarConstants {
         jj_consume_token(EQUAL);
         break;
       default:
-        jj_la1[39] = jj_gen;
+        jj_la1[41] = jj_gen;
         ;
       }
       break;
@@ -732,12 +772,12 @@ public class JasonGrammar implements JasonGrammarConstants {
         jj_consume_token(EQUAL);
         break;
       default:
-        jj_la1[40] = jj_gen;
+        jj_la1[42] = jj_gen;
         ;
       }
       break;
     default:
-      jj_la1[41] = jj_gen;
+      jj_la1[43] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -752,7 +792,7 @@ public class JasonGrammar implements JasonGrammarConstants {
       jj_consume_token(MINUS);
       break;
     default:
-      jj_la1[42] = jj_gen;
+      jj_la1[44] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -767,7 +807,7 @@ public class JasonGrammar implements JasonGrammarConstants {
       jj_consume_token(DIV);
       break;
     default:
-      jj_la1[43] = jj_gen;
+      jj_la1[45] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -787,7 +827,7 @@ public class JasonGrammar implements JasonGrammarConstants {
   static public Token jj_nt;
   static private int jj_ntk;
   static private int jj_gen;
-  static final private int[] jj_la1 = new int[44];
+  static final private int[] jj_la1 = new int[46];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static private int[] jj_la1_2;
@@ -797,13 +837,13 @@ public class JasonGrammar implements JasonGrammarConstants {
       jj_la1_init_2();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x1000,0x100000,0x10000000,0x4000,0x0,0x800400,0x0,0x480000,0x480000,0x0,0x0,0x4000,0x4000,0x4000000,0x480000,0x480000,0x480000,0xc1068000,0x0,0xc1068000,0x2000000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
+      jj_la1_0 = new int[] {0x100000,0x10000000,0x4000,0x0,0x800400,0x0,0x480000,0x480000,0x0,0x0,0x4000,0x4000,0x4000000,0x480000,0x480000,0x480000,0xc9068000,0xc1068000,0x0,0xc1068000,0x0,0xc1068000,0x2000000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x8000,0x0,0x0,0x2,0x1000,0x0,0x6000,0x1004,0x1004,0x20000,0x20000,0x2,0x2,0x0,0x1044,0x1044,0x1044,0x8,0x40000,0x8,0x0,0x20000,0x20000,0x80000000,0x80000000,0x40000000,0x40000000,0x2b00000,0xc000000,0xc000000,0x30000000,0x30000000,0xc047080,0x40000,0x47080,0x0,0x8000,0x0,0x8000,0x100000,0x100000,0x2b00000,0xc000000,0x30000000,};
+      jj_la1_1 = new int[] {0x0,0x0,0x2,0x1000,0x0,0x6000,0x1004,0x1004,0x20000,0x20000,0x2,0x2,0x0,0x1044,0x1044,0x1044,0x10008,0x10008,0x10000,0x8,0x40000,0x8,0x0,0x20000,0x20000,0x80000000,0x80000000,0x40000000,0x40000000,0x2b00000,0xc000000,0xc000000,0x30000000,0x30000000,0xc047080,0x40000,0x47080,0x0,0x8000,0x0,0x8000,0x100000,0x100000,0x2b00000,0xc000000,0x30000000,};
    }
    private static void jj_la1_init_2() {
-      jj_la1_2 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x1,0x0,0x1,0x2,0x0,0x2,0x0,0x0,0x0,0x0,0x0,0x0,};
+      jj_la1_2 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x1,0x0,0x1,0x2,0x0,0x2,0x0,0x0,0x0,0x0,0x0,0x0,};
    }
 
   /** Constructor with InputStream. */
@@ -824,7 +864,7 @@ public class JasonGrammar implements JasonGrammarConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 44; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 46; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -838,7 +878,7 @@ public class JasonGrammar implements JasonGrammarConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 44; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 46; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -855,7 +895,7 @@ public class JasonGrammar implements JasonGrammarConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 44; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 46; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -865,7 +905,7 @@ public class JasonGrammar implements JasonGrammarConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 44; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 46; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -881,7 +921,7 @@ public class JasonGrammar implements JasonGrammarConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 44; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 46; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -890,7 +930,7 @@ public class JasonGrammar implements JasonGrammarConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 44; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 46; i++) jj_la1[i] = -1;
   }
 
   static private Token jj_consume_token(int kind) throws ParseException {
@@ -946,7 +986,7 @@ public class JasonGrammar implements JasonGrammarConstants {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 44; i++) {
+    for (int i = 0; i < 46; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
