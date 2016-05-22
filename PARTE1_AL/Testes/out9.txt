@@ -1,0 +1,3 @@
+@(01,01)      IDENTIFIER - n
+Erro léxico na linha 1, coluna 2.
+Encontrado: "_" (95).

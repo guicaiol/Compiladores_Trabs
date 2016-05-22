@@ -1,0 +1,22 @@
+PROGRAM teste1;
+
+VARIABLES
+    INTEGER x, z;
+
+PROCEDURE proc1
+    PARAMETERS 
+        INTEGER y;
+    
+    BEGIN
+        IF Y > 10
+        THEN SET z = 5;
+        ELSE SET z = -5;
+        ENDIF;
+    
+        WRITE z;
+    END;
+    
+BEGIN
+    READ x;
+    proc1(x);
+END.

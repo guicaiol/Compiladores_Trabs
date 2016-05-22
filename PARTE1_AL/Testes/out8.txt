@@ -1,0 +1,3 @@
+@(01,01)      IDENTIFIER - abc
+Erro léxico na linha 1, coluna 4.
+Encontrado: "_" (95).

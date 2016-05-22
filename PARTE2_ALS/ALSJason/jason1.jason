@@ -1,0 +1,38 @@
+program StringSample;
+variables
+    string Name, First;
+    integer FirstLength;
+begin
+    set Name = "John Smith";
+    set FirstLength = 10;
+    set First = 123;
+    write first
+end.
+
+
+program test;
+types
+    type1 array integer[10];
+    type2 array string[50];
+    record1 record
+        string a1, a2, a3;
+        integer b1, b2, b3;
+        real c1, c2;
+    end;
+    record2 record
+        string a1, a2, a3;
+        real c1, c2;
+    end;
+begin
+end.
+
+program test;
+
+procedure proc1;
+begin
+
+end;
+
+begin
+
+end.

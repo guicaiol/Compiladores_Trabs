@@ -1,0 +1,16 @@
+PROGRAM methMagic
+
+VARIABLES
+    INTEGER a;
+    REAL x, y, z;
+    
+BEGIN
+    SET a = 0;
+    SET x = y = z = 10.5;
+    
+    IF x + y > z THEN WRITE a ENDIF;
+    IF x * y < z THEN WRITE a ENDIF;
+    IF x - y = z THEN WRITE a ENDIF;
+    IF x & y ! z THEN WRITE a ENDIF;
+    IF x / y > z THEN WRITE a ENDIF;
+END.

@@ -1,0 +1,385 @@
+/**
+ * Universidade de São Paulo - USP (São Carlos)
+ * SCC0605 - Teoria da Computação e Compiladores - 2016/1
+ *
+ * TRABALHO PRÁTICO 2 - ANALISADOR SINTÁTICO
+ * Alunos:
+ * Guilherme Caixeta de Oliveira - 8504368
+ * Lucas Marques Rovere - 8139750
+ * Luiz Felipe Machado Votto - 8504006
+ * Victor Palombo Silvano - 7961012
+ */
+ options{  static = true;
+  ignore_case = true;}PARSER_BEGIN(JasonGrammar)package jason;
+
+public class JasonGrammar{  public static void main(String args []) throws ParseException  {    JasonGrammar parser = new JasonGrammar(System.in);    while (true)    {      System.out.println("Reading from standard input...");      System.out.print("Enter a Jason code:\n");      try      {        switch (JasonGrammar.program())        {          case 0 :           	System.out.println("OK.");          break;          case 1 :           	System.out.println("Goodbye.");          break;          default :           break;        }      }      catch (Exception e)      {        System.out.println("NOK.");        System.out.println(e.getMessage());        JasonGrammar.ReInit(System.in);      }      catch (Error e)      {        System.out.println("Oops.");        System.out.println(e.getMessage());        break;      }    }  }}PARSER_END(JasonGrammar)SKIP : /* SKIPS */{  " "| "\r"| "\t"| "\n"
+| "/*" : COMMENT}
+
+< COMMENT > SKIP : /* COMMENT SKIP */
+{
+  "*/" : DEFAULT
+  //< EOF > : ERROR
+}
+
+< COMMENT > MORE : /* COMMENT MORE */
+{
+  < ~[] >}TOKEN : /* KEYWORDS */{  < ARRAY  : "array" >
+| < ENDWHILE  : "endwhile" >
+| < PROGRAM  : "program" >
+| < BEGIN  : "begin" >
+| < FUNCTION  : "function" >
+| < READ  : "read" >
+| < THEN  : "then" >
+| < CALL  : "call" >
+| < IF  : "if" >
+| < REAL  : "real" >
+| < TYPES  : "types" >
+| < DO  : "do" >
+| < INTEGER  : "integer" >
+| < RECORD  : "record" >
+| < UNTIL  : "until" >
+| < ELSE  : "else" >
+| < PARAMETERS  : "parameters" >
+| < RETURN  : "return" >
+| < VARIABLES  : "variables" >
+| < END  : "end" >
+| < SET  : "set" >
+| < WHILE  : "while" >
+| < ENDIF  : "endif" >
+| < PROCEDURE  : "procedure" >
+| < STRING  : "string" >
+| < WRITE  : "write" >
+| < ENDUNTIL  : "enduntil" >
+| < RETURNS  : "returns" >
+| < VAR  : "var" >}
+TOKEN : /* OTHER TOKENS */{
+  < #DIGIT : [ "0"-"9" ] >
+| < #LETTER : [ "a"-"z" ] | [ "A"-"Z" ] >
+| < #ANY_CHARACTER : ~["\""] >
+| < IDENTIFIER : < LETTER > (< LETTER > | < DIGIT >)* >
+| < NUMERIC_LITERAL : (< DIGIT >)+ "." (< DIGIT >)+ | (< DIGIT >)+ >
+| < STRING_LITERAL : "\"" (< ANY_CHARACTER >)* "\"" >
+| < DOT  : "." >
+| < SEMICOLON : ";" >
+| < COMMA  : "," >
+| < PARENT_OPEN  : "(" >
+| < PARENT_CLOSE : ")" >
+| < EQUAL : "=" >
+| < LESS : "<" >
+| < GREATER : ">" >
+| < NEQUAL : "!" >
+| < PLUS : "+" >
+| < MINUS : "-" >
+| < MULT : "*" >
+| < DIV : "/" >
+| < AND : "&" >
+| < BACKSLASH : "\\" >
+| < NOT : "~" >
+| < BRACKETS_OPEN : "[" >
+| < BRACKETS_CLOSE : "]" >}int program() :{}{
+  header() declSec() block() < DOT >  {    return 0;  }| < DOT >  {    return 1;  }}
+
+void header() :
+{}
+{  < PROGRAM > < IDENTIFIER > < SEMICOLON > 
+}
+
+void block() :
+{}{  < BEGIN > statements() < END > 
+}
+
+void declSec() :
+{}
+{
+  [typeDeclSec()] [varDeclSec()] [subProgramDecls()]
+}
+
+void typeDeclSec() :
+{}{
+  < TYPES > typeDecls()
+}
+
+void typeDecls() :
+{}
+{
+  typeDecl() [typeDecls()]
+}
+void typeDecl() :
+{}
+{  < IDENTIFIER > typeSpecification()
+}
+
+void typeSpecification() :
+{}
+{
+  arraySpecification()
+| recordSpecification()
+}
+
+void arraySpecification() :
+{}
+{  < ARRAY > dataType() < BRACKETS_OPEN > < NUMERIC_LITERAL > < BRACKETS_CLOSE > < SEMICOLON > 
+}
+
+void recordSpecification() :
+{}
+{  < RECORD > varDecls() < END > < SEMICOLON >
+}
+
+void varDeclSec() :
+{}
+{  < VARIABLES > varDecls()
+}
+
+void varDecls() :
+{}
+{
+  varDecl() [varDecls()] 
+}
+
+void varDecl() :
+{}
+{  dataType() idList() < SEMICOLON >
+}
+
+void dataType() :
+{}
+{  < REAL >
+| < INTEGER > 
+| < IDENTIFIER >
+| < STRING >
+}
+
+void idList() :
+{}
+{
+  < IDENTIFIER > [idList2()]
+}
+
+void idList2() :
+{}
+{
+  < COMMA > < IDENTIFIER > [idList2()]
+}
+
+void subProgramDecls() :
+{}
+{
+  subProgramDecl() [subProgramDecls()]
+}
+
+void subProgramDecl() :
+{}
+{  procDecl()
+| functionDecl()
+}
+
+void procDecl() :
+{}
+{
+  procHeader() subProgramDeclSec() block() < SEMICOLON >}
+
+void procHeader() :
+{}
+{  < PROCEDURE > < IDENTIFIER > < SEMICOLON >
+}
+
+void subProgramDeclSec() :
+{}
+{  [paramDeclSec()] declSec()
+}
+
+void paramDeclSec() :
+{}
+{  < PARAMETERS > paramDecls()
+}
+
+void paramDecls() :
+{}
+{
+  paramDecl() [paramDecls2()]
+}
+
+void paramDecls2() :
+{}
+{
+  paramDecl() [paramDecls2()] 
+}
+
+void paramDecl() :
+{}
+{  dataType() < IDENTIFIER > < SEMICOLON >
+| < VAR > dataType() < IDENTIFIER >
+}
+
+void functionDecl() :
+{}
+{  functionHeader() subProgramDeclSec() functionBlock() < SEMICOLON >
+}
+
+void functionHeader() :
+{}
+{  < FUNCTION > < IDENTIFIER > <RETURNS > dataType() < SEMICOLON >
+}
+
+void functionBlock() :
+{}
+{  < BEGIN > statements() returnStatement() < END >
+}
+
+void statements() :
+{}
+{
+  [statement() < SEMICOLON > statements()] 
+}
+
+void statement() :
+{}
+{  < READ > variable()
+| < SET > variable() < EQUAL > expression()
+| < WRITE > variable()
+| < IF > condition() < THEN > statements() elseClause()
+| < WHILE > condition() < DO > statements() < ENDWHILE >
+| < UNTIL > condition() < DO > statements() < ENDUNTIL >
+| < CALL > < IDENTIFIER > [argList()]
+}
+
+void elseClause() :{}
+{  [< ELSE > statements()] < ENDIF >
+}
+
+void returnStatement() :
+{}
+{  < SEMICOLON > < RETURN > condition()
+}
+
+void argList() :
+{}
+{  < PARENT_OPEN > arguments() < PARENT_CLOSE >
+}
+
+void arguments() :
+{}
+{
+  argument() [arguments2()]
+}
+
+void arguments2() :
+{}
+{
+  < COMMA > argument() [arguments2()]
+}
+
+void condition() :
+{}
+{
+  compoundCondition() [condition2()]
+}
+
+void condition2() :
+{}
+{
+  < BACKSLASH > compoundCondition() [condition2()]
+}
+
+void compoundCondition() :
+{}
+{
+  simpleCondition() [compoundCondition2()]
+}
+
+void compoundCondition2() :
+{}
+{
+  < AND > simpleCondition() [compoundCondition2()]
+}
+
+void simpleCondition() :
+{}
+{  expression() [relOp() expression()]
+}
+
+void expression() :
+{}
+{
+  term() [expression2()]
+}
+
+void expression2() :
+{}
+{
+  addOp() term() [expression2()]
+}
+
+void term() :
+{}
+{
+  unary() [term2()]
+}
+
+void term2() :
+{}
+{
+  multOp() unary() [term2()]
+}
+
+void unary() :
+{}
+{
+  < PLUS > unary()
+| < MINUS > unary()
+| factor()
+}
+
+void factor() :
+{}
+{
+  < IDENTIFIER > (argList() | variableNI())
+| < NUMERIC_LITERAL >
+| < STRING_LITERAL >
+| < NOT > factor()
+| < PARENT_OPEN > condition() < PARENT_CLOSE >
+}
+
+void variableNI() :
+{}
+{  [< BRACKETS_OPEN > expression() < BRACKETS_CLOSE >] [variable2()]
+}
+
+void variable() :
+{}
+{
+  < IDENTIFIER > [< BRACKETS_OPEN > expression() < BRACKETS_CLOSE >] [variable2()]
+}
+
+void variable2() :
+{}
+{
+  < DOT > variable()
+}
+
+void relOp() :
+{}
+{  < EQUAL >
+| < NEQUAL >
+| < GREATER > [< EQUAL >]
+| < LESS > [< EQUAL >] 
+}
+
+void addOp() :
+{}
+{  < PLUS >
+| < MINUS >
+}
+
+void multOp() :
+{}
+{  < MULT >
+| < DIV >
+}
+
+void argument() :
+{}
+{  condition()
+}
+

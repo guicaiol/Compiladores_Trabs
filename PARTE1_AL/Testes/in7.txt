@@ -1,0 +1,15 @@
+abc
+abc1
+n1abc
+IFabc
+ENDIF1
+
+abc-1
+123
+1;abc
+1abc;
+abc 1
+1abc
+1WHILE
+abc,1 
+abc;

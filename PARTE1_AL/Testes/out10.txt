@@ -1,0 +1,22 @@
+@(02,01)         PROGRAM - PROGRAM
+@(02,09)      IDENTIFIER - EvalFormula
+@(02,20)       SEMICOLON - ;
+@(04,01)       VARIABLES - VARIABLES
+@(05,05)         INTEGER - INTEGER
+@(05,13)      IDENTIFIER - a
+@(05,14)       SEMICOLON - ;
+@(06,05)            REAL - REAL
+@(06,10)      IDENTIFIER - b
+@(06,11)       SEMICOLON - ;
+@(08,01)       PROCEDURE - PROCEDURE
+@(08,11)      IDENTIFIER - FindFormula
+@(08,22)       SEMICOLON - ;
+@(09,05)      PARAMETERS - PARAMETERS
+@(10,09)         INTEGER - INTEGER
+@(10,17)      IDENTIFIER - x
+@(10,18)       SEMICOLON - ;
+@(11,09)            REAL - REAL
+@(11,14)      IDENTIFIER - y
+@(11,15)       SEMICOLON - ;
+Encontrado EOF prematuro: abertura de comentário de bloco sem fechamento.
+

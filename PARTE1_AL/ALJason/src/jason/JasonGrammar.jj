@@ -1,0 +1,152 @@
+/**
+ * Universidade de São Paulo - USP (São Carlos)
+ * SCC0605 - Teoria da Computação e Compiladores - 2016/1
+ *
+ * TRABALHO PRÁTICO 1 - ANALISADOR LÉXICO
+ * Alunos:
+ * Guilherme Caixeta de Oliveira - 8504368
+ * Lucas Marques Rovere - 8139750
+ * Luiz Felipe Machado Votto - 8504006
+ * Victor Palombo Silvano - 7961012
+ */
+ options{  static = true;
+  ignore_case = true;}PARSER_BEGIN(JasonGrammar)package jason;
+
+public class JasonGrammar {
+  	public static void main(String args []) throws ParseException {	    JasonGrammar parser = new JasonGrammar(System.in);
+	    		while(true) {			try {
+				parser.lexical();			} catch (Exception e) {				System.out.println(e.getMessage());
+				break;			} catch (Error e) {				System.out.println(e.getMessage());
+				break;			}	    }
+    	}
+
+	static void print(Token t, String tokenName) {
+	  	System.out.printf("@(%02d,%02d) %15s - %s\n", t.beginLine, t.beginColumn, tokenName, t.toString());
+	}
+  }PARSER_END(JasonGrammar)SKIP: {
+  " " | "\r" | "\t" | "\n"
+}
+
+SKIP: {  "/*" : COMMENT}
+
+< COMMENT > SKIP : {
+  "*/" : DEFAULT
+}
+
+< COMMENT > MORE : {
+  < ~[] >}TOKEN : { /* KEYWORDS */  < ARRAY  : "array" >
+| < ENDWHILE  : "endwhile" >
+| < PROGRAM  : "program" >
+| < BEGIN  : "begin" >
+| < FUNCTION  : "function" >
+| < READ  : "read" >
+| < THEN  : "then" >
+| < CALL  : "call" >
+| < IF  : "if" >
+| < REAL  : "real" >
+| < TYPES  : "types" >
+| < DO  : "do" >
+| < INTEGER  : "integer" >
+| < RECORD  : "record" >
+| < UNTIL  : "until" >
+| < ELSE  : "else" >
+| < PARAMETERS  : "parameters" >
+| < RETURN  : "return" >
+| < VARIABLES  : "variables" >
+| < END  : "end" >
+| < SET  : "set" >
+| < WHILE  : "while" >
+| < ENDIF  : "endif" >
+| < PROCEDURE  : "procedure" >
+| < STRING  : "string" >
+| < WRITE  : "write" >
+| < ENDUNTIL  : "enduntil" >
+| < RETURNS  : "returns" >
+| < VAR  : "var" >}
+TOKEN : { /* OTHER TOKENS */
+  < #DIGIT : [ "0"-"9" ] >
+| < #LETTER : [ "a"-"z" ] | [ "A"-"Z" ] >
+| < #ANY_CHARACTER : ~["\""] >
+| < IDENTIFIER : < LETTER > (< LETTER > | < DIGIT >)* >
+| < NUMERIC_LITERAL : (< DIGIT >)+ "." (< DIGIT >)+ | (< DIGIT >)+ >
+| < STRING_LITERAL : "\"" (< ANY_CHARACTER >)* "\"" >
+| < DOT  : "." >
+| < SEMICOLON : ";" >
+| < COMMA  : "," >
+| < PARENT_OPEN  : "(" >
+| < PARENT_CLOSE : ")" >
+| < EQUAL : "=" >
+| < LESS : "<" >
+| < LESS_E : "<=" >
+| < GREATER : ">" >
+| < GREATER_E : ">=" >
+| < NEQUAL : "!" >
+| < PLUS : "+" >
+| < MINUS : "-" >
+| < MULT : "*" >
+| < DIV : "/" >
+| < AND : "&" >
+| < BACKSLASH : "\\" >
+| < NOT : "~" >
+| < BRACKETS_OPEN : "[" >
+| < BRACKETS_CLOSE : "]" >}
+void lexical() throws TokenMgrError, ParseException :
+{
+	Token t;
+}
+{
+  // Keywords
+  t=< ARRAY > 		{ print(t, "ARRAY"); }
+| t=< ENDWHILE >	{ print(t, "ENDWHILE"); }
+| t=< PROGRAM >		{ print(t, "PROGRAM"); }
+| t=< BEGIN >		{ print(t, "BEGIN"); }
+| t=< FUNCTION >	{ print(t, "FUNCTION"); }
+| t=< READ >		{ print(t, "READ"); }
+| t=< THEN >		{ print(t, "THEN"); }
+| t=< CALL >		{ print(t, "CALL"); }
+| t=< IF >			{ print(t, "IF"); }
+| t=< REAL >		{ print(t, "REAL"); }
+| t=< TYPES >		{ print(t, "TYPES"); }
+| t=< DO >			{ print(t, "DO"); }
+| t=< INTEGER >		{ print(t, "INTEGER"); }
+| t=< RECORD >		{ print(t, "RECORD"); }
+| t=< UNTIL >		{ print(t, "UNTIL"); }
+| t=< ELSE >		{ print(t, "ELSE"); }
+| t=< PARAMETERS >	{ print(t, "PARAMETERS"); }
+| t=< RETURN >		{ print(t, "RETURN"); }
+| t=< VARIABLES >	{ print(t, "VARIABLES"); }
+| t=< END >			{ print(t, "END"); }
+| t=< SET >			{ print(t, "SET"); }
+| t=< WHILE >		{ print(t, "WHILE"); }
+| t=< ENDIF >		{ print(t, "ENDIF"); }
+| t=< PROCEDURE >	{ print(t, "PROCEDURE"); }
+| t=< STRING >		{ print(t, "STRING"); }
+| t=< WRITE >		{ print(t, "WRITE"); }
+| t=< ENDUNTIL >	{ print(t, "ENDUNTIL"); }
+| t=< RETURNS >		{ print(t, "RETURNS"); }
+| t=< VAR >			{ print(t, "VAR"); }
+| t=< IDENTIFIER >	{ print(t, "IDENTIFIER"); }
+| t=< NUMERIC_LITERAL >{ print(t, "NUMERIC_LITERAL"); }
+| t=< STRING_LITERAL >{ print(t, "STRING_LITERAL"); }
+| t=< DOT >			{ print(t, "DOT"); }
+| t=< SEMICOLON >	{ print(t, "SEMICOLON"); }
+| t=< COMMA >		{ print(t, "COMMA"); }
+| t=< PARENT_OPEN >	{ print(t, "PARENT_OPEN"); }
+| t=< PARENT_CLOSE >{ print(t, "PARENT_CLOSE"); }
+| t=< EQUAL >		{ print(t, "EQUAL"); }
+| t=< LESS >		{ print(t, "LESS"); }
+| t=< LESS_E >		{ print(t, "LESS_E"); }
+| t=< GREATER >		{ print(t, "GREATER"); }
+| t=< GREATER_E >	{ print(t, "GREATER_E"); }
+| t=< NEQUAL >		{ print(t, "NEQUAL"); }
+| t=< PLUS >		{ print(t, "PLUS"); }
+| t=< MINUS >		{ print(t, "MINUS"); }
+| t=< MULT >		{ print(t, "MULT"); }
+| t=< DIV >			{ print(t, "DIV"); }
+| t=< AND >			{ print(t, "AND"); }
+| t=< BACKSLASH >	{ print(t, "BACKSLASH"); }
+| t=< NOT >			{ print(t, "NOT"); }
+| t=< BRACKETS_OPEN >{ print(t, "BRACKETS_OPEN"); }
+| t=< BRACKETS_CLOSE >{ print(t, "BRACKETS_CLOSE"); }
+| t=< EOF >			{ System.exit(0); }
+}
