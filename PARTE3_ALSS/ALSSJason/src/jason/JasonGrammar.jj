@@ -12,6 +12,8 @@
  options{  static = true;
   ignore_case = true;}PARSER_BEGIN(JasonGrammar)package jason;
 
+import symboltable.SymbolTable;
+
 public class JasonGrammar {
   
 	public static void main(String args []) throws ParseException {
@@ -32,7 +34,7 @@ public class JasonGrammar {
 			}
 	    }
 	}
-  
+
 }PARSER_END(JasonGrammar)SKIP: {
   " " | "\r" | "\t" | "\n"
 | "/*" : COMMENT
