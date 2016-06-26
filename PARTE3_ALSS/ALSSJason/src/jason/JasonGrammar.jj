@@ -12,12 +12,15 @@
  options{  static = true;
   ignore_case = true;}PARSER_BEGIN(JasonGrammar)package jason;
 
-import symboltable.SymbolTable;
+import semantics.SemanticAnalyser;
 
 public class JasonGrammar {
+
+  	private static SemanticAnalyser sa;
   
 	public static void main(String args []) throws ParseException {
 	    JasonGrammar parser = new JasonGrammar(System.in);
+	    sa = new SemanticAnalyser();
 	    
 		while(true) {
 			try {
@@ -128,7 +131,7 @@ TOKEN : { /* OTHER TOKENS */
 
 void header() :
 {}
-{  < PROGRAM > < IDENTIFIER > < SEMICOLON > 
+{  < PROGRAM > < IDENTIFIER > < SEMICOLON >
 }
 
 void block() :
