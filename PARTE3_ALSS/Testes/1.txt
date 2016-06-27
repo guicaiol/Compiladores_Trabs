@@ -1,0 +1,38 @@
+program jasoncerto;
+types
+    ta array real[10];
+    trecord record
+        real real1, real2, real3;
+        integer int1, int2, int3;
+        string string1, string2;
+    end;
+
+variables
+    real real1, real2, real3;
+    integer int1, int2, int3;
+    string string1, string2;
+    ta a1;
+
+procedure testeproc;
+    parameters
+        integer inteum;
+    variables
+        integer var1, var2;
+    begin
+        read var1;
+    end;
+
+function testefunc returns integer;
+    parameters
+        integer inteum;
+    variables
+        integer var1, var2;
+    begin
+        write var1;
+        return (var1)
+        end;
+
+begin
+    call testeproc(0);
+    read a1[5];
+end.

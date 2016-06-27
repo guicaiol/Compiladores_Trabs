@@ -1,0 +1,624 @@
+//=======================================================================================//
+Testar:
+
+-Declarar array de tamanho inválido (negativo) ok
+-Acessar posicao inexistente do array ok
+-Identificador não declarado ok
+-Acessar identificador de nível errado (declarado em nível inferior) ok
+-Acessar identificador de nível global* ok
+-Acessar identificador não declarado em record ok
+-Identificador já usado (para variável) ok
+-Identificador já usado (procedure/função) ok
+-Identificador já usado (record) ok
+-Call variável ok
+-Read procedure/função ok
+-Write function* ok
+-Write procedure ok
+-Quantidade de paramentros errado ok
+
+//=======================================================================================//
+
+program jasoncerto;
+    types
+        tarray array real[10];
+        trecord record
+            real real1, real2, real3;
+            integer int1, int2, int3;
+            string string1, string2;
+        end;
+
+    variables
+        real real1, real2, real3;
+        integer int1, int2, int3;
+        string string1, string2;
+
+    procedure testeproc;
+        parameter
+            integer inteum;
+        variables
+            integer var1, var2;
+        begin
+            read var1;
+        end;
+
+    function testefunc returns integer;
+        parameter
+            integer inteum;
+        variables
+            integer var1, var2;
+        begin
+            write var1;
+            return var1
+            end;
+
+    begin
+        call testeproc(0);
+        read tarray[5];
+    end.
+
+//=======================================================================================//
+
+program taminvalido;
+    types
+        tarray array real[-10];
+        trecord record
+            real real1, real2, real3;
+            integer int1, int2, int3;
+            string string1, string2;
+        end;
+
+    variables
+        real real1, real2, real3;
+        integer int1, int2, int3;
+        string string1, string2;
+
+    procedure testeproc;
+        parameter
+            integer inteum;
+        variables
+            integer var1, var2;
+        begin
+            read var1;
+        end;
+
+    function testefunc returns integer;
+        parameter
+            integer inteum;
+        variables
+            integer var1, var2;
+        begin
+            write var1;
+            return var1
+            end;
+
+    begin
+        call testeproc(0);
+        read tarray[5];
+    end.
+
+//=======================================================================================//
+
+program outofrange;
+    types
+        tarray array real[10];
+        trecord record
+            real real1, real2, real3;
+            integer int1, int2, int3;
+            string string1, string2;
+        end;
+
+    variables
+        real real1, real2, real3;
+        integer int1, int2, int3;
+        string string1, string2;
+
+    procedure testeproc;
+        parameter
+            integer inteum;
+        variables
+            integer var1, var2;
+        begin
+            read var1;
+        end;
+
+    function testefunc returns integer;
+        parameter
+            integer inteum;
+        variables
+            integer var1, var2;
+        begin
+            write var1;
+            return var1
+            end;
+
+    begin
+        call testeproc(0);
+        read tarray[15];
+    end.
+
+//=======================================================================================//
+
+program undeclared;
+    types
+        tarray array real[10];
+        trecord record
+            real real1, real2, real3;
+            integer int1, int2, int3;
+            string string1, string2;
+        end;
+
+    variables
+        real real1, real2, real3;
+        integer int1, int2, int3;
+        string string1, string2;
+
+    procedure testeproc;
+        parameter
+            integer inteum;
+        variables
+            integer var1, var2;
+        begin
+            read var1;
+        end;
+
+    function testefunc returns integer;
+        parameter
+            integer inteum;
+        variables
+            integer var1, var2;
+        begin
+            write var1;
+            return var1
+            end;
+
+    begin
+        call funcaoerrada();
+        read tarray[5];
+    end.
+
+//=======================================================================================//
+
+program wronglevel;
+    types
+        tarray array real[10];
+        trecord record
+            real real1, real2, real3;
+            integer int1, int2, int3;
+            string string1, string2;
+        end;
+
+    variables
+        real real1, real2, real3;
+        integer int1, int2, int3;
+        string string1, string2;
+
+    procedure testeproc;
+        parameter
+            integer inteum;
+        variables
+            integer var1, var2;
+        begin
+            read var1;
+        end;
+
+    function testefunc returns integer;
+        parameter
+            integer inteum;
+        variables
+            integer var1, var2;
+        begin
+            write var1;
+            return var1
+            end;
+
+    begin
+        call testeproc(0);
+        write outrotipo1;
+        read var1;
+    end.
+
+//=======================================================================================//
+
+program globalvar;
+    types
+        tarray array real[10];
+        trecord record
+            real real1, real2, real3;
+            integer int1, int2, int3;
+            string string1, string2;
+        end;
+
+    variables
+        real real1, real2, real3;
+        integer int1, int2, int3;
+        string string1, string2;
+
+    procedure testeproc;
+        parameter
+            integer inteum;
+        variables
+            integer var1, var2;
+        begin
+            read real1;
+        end;
+
+    function testefunc returns integer;
+        parameter
+            integer inteum;
+        variables
+            integer var1, var2;
+        begin
+            write var1;
+            return var1
+            end;
+
+    begin
+        call testeproc(0);
+        read tarray[5];
+    end.
+
+//=======================================================================================//
+
+program whatrecord;
+    types
+        tarray array real[10];
+        trecord record
+            real real1, real2, real3;
+            integer int1, int2, int3;
+            string string1, string2;
+        end;
+
+    variables
+        real real1, real2, real3;
+        integer int1, int2, int3;
+        string string1, string2;
+
+    procedure testeproc;
+        parameter
+            integer inteum;
+        variables
+            integer var1, var2;
+        begin
+            read var1;
+        end;
+
+    function testefunc returns integer;
+        parameter
+            integer inteum;
+        variables
+            integer var1, var2;
+        begin
+            write var1;
+            return var1
+            end;
+
+    begin
+        call testeproc(0);
+        read trecord.real1;
+        read trecord.real4;
+    end.
+
+//=======================================================================================//
+
+program duplicatevar;
+    types
+        tarray array real[10];
+        trecord record
+            real real1, real2, real3;
+            integer int1, int2, int3;
+            string string1, string2;
+        end;
+
+    variables
+        real real1, real1, real1;
+        integer int1, int1, int1;
+        string string1, string1;
+
+    procedure testeproc;
+        parameter
+            integer inteum;
+        variables
+            integer var1, int1;
+        begin
+            read var1;
+        end;
+
+    function testefunc returns integer;
+        parameter
+            integer inteum;
+        variables
+            integer var1, var2;
+        begin
+            write var1;
+            return var1
+            end;
+
+    begin
+        call testeproc(0);
+        read tarray[5];
+    end.
+
+//=======================================================================================//
+
+program duplicateproc;
+    types
+        tarray array real[10];
+        trecord record
+            real real1, real2, real3;
+            integer int1, int2, int3;
+            string string1, string2;
+        end;
+
+    variables
+        real real1, real2, real3;
+        integer int1, int2, int3;
+        string string1, string2;
+
+    procedure samename;
+        parameter
+            integer inteum;
+        variables
+            integer var1, var2;
+        begin
+            read var1;
+        end;
+
+    function samename returns integer;
+        parameter
+            integer inteum;
+        variables
+            integer var1, var2;
+        begin
+            write var1;
+            return var1
+            end;
+
+    begin
+        call samename(0);
+        read tarray[5];
+    end.
+
+//=======================================================================================//
+
+program duplicaterecord;
+    types
+        tarray array real[10];
+        samename record
+            real real1, real2, real3;
+        end;
+        samename record
+            real real1, real2, real3;
+        end;
+
+    variables
+        real real1, real2, real3;
+        integer int1, int2, int3;
+        string string1, string2;
+
+    procedure testeproc;
+        parameter
+            integer inteum;
+        variables
+            integer var1, var2;
+        begin
+            read var1;
+        end;
+
+    function testefunc returns integer;
+        parameter
+            integer inteum;
+        variables
+            integer var1, var2;
+        begin
+            write var1;
+            return var1
+            end;
+
+    begin
+        call testeproc(0);
+        read tarray[5];
+    end.
+
+//=======================================================================================//
+
+program callvar;
+    types
+        tarray array real[10];
+        trecord record
+            real real1, real2, real3;
+            integer int1, int2, int3;
+            string string1, string2;
+        end;
+
+    variables
+        real real1, real2, real3;
+        integer int1, int2, int3;
+        string string1, string2;
+
+    procedure testeproc;
+        parameter
+            integer inteum;
+        variables
+            integer var1, var2;
+        begin
+            read var1;
+        end;
+
+    function testefunc returns integer;
+        parameter
+            integer inteum;
+        variables
+            integer var1, var2;
+        begin
+            write var1;
+            return var1
+            end;
+
+    begin
+        call real1();
+        read tarray[5];
+    end.
+
+//=======================================================================================//
+
+program readproc;
+    types
+        tarray array real[10];
+        trecord record
+            real real1, real2, real3;
+            integer int1, int2, int3;
+            string string1, string2;
+        end;
+
+    variables
+        real real1, real2, real3;
+        integer int1, int2, int3;
+        string string1, string2;
+
+    procedure testeproc;
+        parameter
+            integer inteum;
+        variables
+            integer var1, var2;
+        begin
+            read var1;
+        end;
+
+    function testefunc returns integer;
+        parameter
+            integer inteum;
+        variables
+            integer var1, var2;
+        begin
+            write var1;
+            return var1
+            end;
+
+    begin
+        call testeproc(0);
+        read testeproc;
+    end.
+
+//=======================================================================================//
+
+program writefunc;
+    types
+        tarray array real[10];
+        trecord record
+            real real1, real2, real3;
+            integer int1, int2, int3;
+            string string1, string2;
+        end;
+
+    variables
+        real real1, real2, real3;
+        integer int1, int2, int3;
+        string string1, string2;
+
+    procedure testeproc;
+        parameter
+            integer inteum;
+        variables
+            integer var1, var2;
+        begin
+            read var1;
+        end;
+
+    function testefunc returns integer;
+        parameter
+            integer inteum;
+        variables
+            integer var1, var2;
+        begin
+            write var1;
+            return var1
+            end;
+
+    begin
+        call testeproc(0);
+        read tarray[5];
+        write testefunc;
+    end.
+
+//=======================================================================================//
+
+program writeproc;
+    types
+        tarray array real[10];
+        trecord record
+            real real1, real2, real3;
+            integer int1, int2, int3;
+            string string1, string2;
+        end;
+
+    variables
+        real real1, real2, real3;
+        integer int1, int2, int3;
+        string string1, string2;
+
+    procedure testeproc;
+        parameter
+            integer inteum;
+        variables
+            integer var1, var2;
+        begin
+            read var1;
+        end;
+
+    function testefunc returns integer;
+        parameter
+            integer inteum;
+        variables
+            integer var1, var2;
+        begin
+            write var1;
+            return var1
+            end;
+
+    begin
+        call testeproc(0);
+        read tarray[5];
+        write testeproc;
+    end.
+
+//=======================================================================================//
+
+program paramerrado;
+    types
+        tarray array real[10];
+        trecord record
+            real real1, real2, real3;
+            integer int1, int2, int3;
+            string string1, string2;
+        end;
+
+    variables
+        real real1, real2, real3;
+        integer int1, int2, int3;
+        string string1, string2;
+
+    procedure testeproc;
+        parameter
+            integer inteum;
+        variables
+            integer var1, var2;
+        begin
+            read var1;
+        end;
+
+    function testefunc returns integer;
+        parameter
+            integer inteum;
+        variables
+            integer var1, var2;
+        begin
+            write var1;
+            return var1
+            end;
+
+    begin
+        call testeproc(0, 4, 5);
+        read tarray[5];
+    end.
+
+//=======================================================================================//

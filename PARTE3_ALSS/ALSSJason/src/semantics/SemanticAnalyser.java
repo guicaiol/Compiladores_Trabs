@@ -8,7 +8,7 @@ import jason.Token;
 public class SemanticAnalyser {
 
 	// Symbol Table
-	SymbolTable st = new SymbolTable();;
+	SymbolTable st = new SymbolTable();
 	int currentLevel = 0;
 	
 	Reference refIdentifier = null;
@@ -38,13 +38,12 @@ public class SemanticAnalyser {
 	
 	// Semantic routines
 	public void rs(int n, Token t) {
-		final String id = t.image;
+		final String id = (t!=null)? t.image : "unknown";
 		
-		System.out.println("rs("+n+") ");
+		//System.out.println("rs("+n+") ");
 		
 		// Switch semantic routine number
 		switch(n) {
-		
 			case 0: { // Check if identifier is already declared
 				if(st.isDeclared(id, currentLevel))
 					error("Identificador '"+id+"' já declarado", t);
@@ -166,6 +165,9 @@ public class SemanticAnalyser {
 			} break;
 			
 			case 17: { // Decrement level, end of block
+				// Erase entire level
+				st.removeLevel(currentLevel);
+				
 				currentLevel--;
 			} break;
 
@@ -222,10 +224,11 @@ public class SemanticAnalyser {
 			
 			case 24: { // Set current identifier category: VARIABLE 
 				refIdentifier.category = Category.VARIABLE;
+				refIdentifier.type = currentDataType;
 			} break;
 			
 			case 25: { // Check if variable is an array type
-				if(!lastVariable.id.contains("array"))
+				if(!lastVariable.type.type.id.contains("array"))
 					error("Identificador '"+lastVariable.id+"' não é um array", t);
 			} break;
 			
@@ -244,11 +247,16 @@ public class SemanticAnalyser {
 				if(lastProcFunc.numParameters!=procFuncArgList)
 					error("Procedimento ou função chamado com número incorreto de parâmetros; entrada: "+procFuncArgList+", esperado: "+lastProcFunc.numParameters, t);
 			} break;
-				
+			
+			/// TODO: Check "var1.var2", where var1 needs to be a record
 		}
+		
 	}
 	
 	private void error(String error, Token t) {
-		System.out.println("Erro: "+error+"; linha "+t.beginLine+", coluna "+t.beginColumn+".");
+		if(t==null)
+			System.out.println("Erro: "+error+".");
+		else
+			System.out.println("Erro: "+error+"; linha "+t.beginLine+", coluna "+t.beginColumn+".");
 	}
 }

@@ -25,7 +25,7 @@ public class JasonGrammar {
 		while(true) {
 			try {
 				if(parser.program()==0) {
-				  	System.out.println("SUCESSO!\n");
+				  	System.out.println("SUCESSO!");
 					break;
 				}
 			} catch (Exception e) {
@@ -188,8 +188,8 @@ void varDecls() :
 }
 
 void varDecl() :
-{}
-{  dataType() idList() < SEMICOLON >
+{ Token t; }
+{  t=dataType() {sa.rs(13,t);} idList() < SEMICOLON >
 }
 
 Token dataType() :
@@ -407,9 +407,9 @@ void variableNI() :
 }
 
 void variable() :
-{}
+{ Token t; }
 {
-  < IDENTIFIER > [< BRACKETS_OPEN > expression() < BRACKETS_CLOSE >] [variable2()]
+  t=< IDENTIFIER > {sa.rs(2,t);} {sa.rs(23,t);} [< BRACKETS_OPEN > {sa.rs(25,null);} expression() < BRACKETS_CLOSE >] [variable2()]
 }
 
 void variable2() :

@@ -14,7 +14,7 @@ public class JasonGrammar implements JasonGrammarConstants {
                 while(true) {
                         try {
                                 if(parser.program()==0) {
-                                        System.out.println("SUCESSO!\u005cn");
+                                        System.out.println("SUCESSO!");
                                         break;
                                 }
                         } catch (Exception e) {
@@ -170,7 +170,9 @@ public class JasonGrammar implements JasonGrammarConstants {
   }
 
   static final public void varDecl() throws ParseException {
-    dataType();
+  Token t;
+    t = dataType();
+                sa.rs(13,t);
     idList();
     jj_consume_token(SEMICOLON);
   }
@@ -770,10 +772,14 @@ public class JasonGrammar implements JasonGrammarConstants {
   }
 
   static final public void variable() throws ParseException {
-    jj_consume_token(IDENTIFIER);
+  Token t;
+    t = jj_consume_token(IDENTIFIER);
+                    sa.rs(2,t);
+                                  sa.rs(23,t);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case BRACKETS_OPEN:
       jj_consume_token(BRACKETS_OPEN);
+                                                                    sa.rs(25,null);
       expression();
       jj_consume_token(BRACKETS_CLOSE);
       break;
