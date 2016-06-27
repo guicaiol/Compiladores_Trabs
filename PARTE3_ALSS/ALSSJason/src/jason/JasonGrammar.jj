@@ -131,7 +131,7 @@ TOKEN : { /* OTHER TOKENS */
 
 void header() :
 {}
-{  < PROGRAM > < IDENTIFIER > < SEMICOLON >
+{  < PROGRAM > < IDENTIFIER > < SEMICOLON > 
 }
 
 void block() :

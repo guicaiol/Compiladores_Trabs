@@ -1,6 +1,6 @@
 package symboltable;
 
-enum Category {
+public enum Category {
 	VARIABLE,
 	TYPE,
 	FUNCTION,

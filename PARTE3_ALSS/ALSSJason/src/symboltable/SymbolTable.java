@@ -8,70 +8,76 @@ import java.util.HashMap;
 public class SymbolTable {
 	
 	// Hash table
-	HashMap<String,Reference> table;
+	private HashMap<Integer, HashMap<String,Reference>> table;
 	
 	public SymbolTable() {
 		// Create HashMap
 		table = new HashMap<>();
+		checkLevelHash(0);
 		
 		// Create native types and procedure
-		Reference refString = insert("string");
+		Reference refString = insert(0, "string");
 		refString.category = Category.TYPE;
 		refString.numBytes = 256;
 		
-		Reference refInteger = insert("integer");
+		Reference refInteger = insert(0, "integer");
 		refInteger.category = Category.TYPE;
 		refInteger.numBytes = 4;
 		
-		Reference refReal = insert("real");
+		Reference refReal = insert(0, "real");
 		refReal.category = Category.TYPE;
 		refReal.numBytes = 8;
 		
-		Reference refRead = insert("read");
+		Reference refRead = insert(0, "read");
 		refRead.category = Category.PROCEDURE;
 		
-		Reference refWrite = insert("write");
+		Reference refWrite = insert(0, "write");
 		refWrite.category = Category.PROCEDURE;
 	}
 	
-	Reference search(String id) {
-		// Return from hash
-		return table.get(id);
-	}
-	
-	void removeLevel(int level) {
-		// Iterate through hash
-		for(Map.Entry<String,Reference> entry : table.entrySet()) {
-			String id = entry.getKey();
-			Reference ref = entry.getValue();
-			
-			// Check and remove level
-			if(ref.level==level)
-				table.remove(id);
+	public Reference search(String id) {
+		for(Map.Entry<Integer,HashMap<String,Reference>> entry : table.entrySet()) {
+			HashMap<String,Reference> table = entry.getValue();
+
+			// Check level hash
+			Reference ref = table.get(id);
+			if(ref!=null)
+				return ref;
 		}
+		
+		return null;
 	}
 	
-	Reference insert(String id) {
+	public void removeLevel(int level) {
+		// Remove level hash
+		table.remove(level);
+	}
+	
+	public Reference insert(int level, String id) {
 		// Create new reference
 		Reference ref = new Reference();
 		
+		// Check level hash
+		checkLevelHash(level);
+		
 		// Add to hash
-		table.put(id, ref);
+		table.get(level).put(id, ref);
 		
 		// Return
 		return ref;
 	}
 	
-	boolean isDeclared(String id, int level) {
-		// Search
-		Reference ref = search(id);
-		
-		// Check not found
-		if(ref==null)
-			return false;
+	public boolean isDeclared(String id, int level) {
+		checkLevelHash(level);
 		
 		// Check level
-		return (ref.level==level);
+		return (table.get(level).get(id)!=null);
+	}
+	
+	private void checkLevelHash(int level) {
+		// Check if level hash is created
+		if(table.get(level)==null)
+			table.put(level, new HashMap<>());
 	}
 	
 }
