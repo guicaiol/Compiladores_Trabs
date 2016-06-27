@@ -55,7 +55,7 @@ public class SymbolTable {
 	
 	public Reference insert(int level, String id) {
 		// Create new reference
-		Reference ref = new Reference();
+		Reference ref = new Reference(id);
 		
 		// Check level hash
 		checkLevelHash(level);

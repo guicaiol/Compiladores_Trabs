@@ -135,7 +135,7 @@ void header() :
 }
 
 void block() :
-{}{  < BEGIN > statements() < END > 
+{}{  < BEGIN > statements() < END > {sa.rs(17,null);}     
 }
 
 void declSec() :
@@ -155,8 +155,8 @@ void typeDecls() :
   typeDecl() [typeDecls()]
 }
 void typeDecl() :
-{}
-{  < IDENTIFIER > typeSpecification()
+{ Token t; }
+{  t=< IDENTIFIER > {sa.rs(0,t);sa.rs(3,t);sa.rs(9,t);} typeSpecification()
 }
 
 void typeSpecification() :
@@ -167,13 +167,13 @@ void typeSpecification() :
 }
 
 void arraySpecification() :
-{}
-{  < ARRAY > dataType() < BRACKETS_OPEN > (< INTEGER_LITERAL > | < REAL_LITERAL >) < BRACKETS_CLOSE > < SEMICOLON > 
+{ Token t; }
+{  < ARRAY > {sa.rs(1,null);} t=dataType() {sa.rs(5,t);} < BRACKETS_OPEN > (t=< INTEGER_LITERAL > | t=< REAL_LITERAL >) {sa.rs(6,t);sa.rs(7,t);} < BRACKETS_CLOSE > < SEMICOLON > 
 }
 
 void recordSpecification() :
 {}
-{  < RECORD > varDecls() < END > < SEMICOLON >
+{  < RECORD > {sa.rs(8,null);} varDecls() < END > < SEMICOLON > {sa.rs(10,null);}
 }
 
 void varDeclSec() :
@@ -192,24 +192,24 @@ void varDecl() :
 {  dataType() idList() < SEMICOLON >
 }
 
-void dataType() :
-{}
-{  < REAL >
-| < INTEGER > 
-| < IDENTIFIER >
-| < STRING >
+Token dataType() :
+{ Token t; }
+{  t=< REAL > { return t; }
+| t=< INTEGER > { return t; }
+| t=< IDENTIFIER > { sa.rs(2,t); sa.rs(4,t); return t; }
+| t=< STRING > { return t; }
 }
 
 void idList() :
-{}
+{ Token t; }
 {
-  < IDENTIFIER > [idList2()]
+  t=< IDENTIFIER > {sa.rs(0,t); sa.rs(3,t); sa.rs(24,t);} [idList2()]
 }
 
 void idList2() :
-{}
+{ Token t; }
 {
-  < COMMA > < IDENTIFIER > [idList2()]
+  < COMMA > t=< IDENTIFIER > {sa.rs(0,t); sa.rs(3,t); sa.rs(24,t);} [idList2()]
 }
 
 void subProgramDecls() :
@@ -230,8 +230,8 @@ void procDecl() :
   procHeader() subProgramDeclSec() block() < SEMICOLON >}
 
 void procHeader() :
-{}
-{  < PROCEDURE > < IDENTIFIER > < SEMICOLON >
+{ Token t; }
+{  < PROCEDURE > t=< IDENTIFIER > {sa.rs(0,t); sa.rs(3,t); sa.rs(11,t);} < SEMICOLON >
 }
 
 void subProgramDeclSec() :
@@ -247,19 +247,19 @@ void paramDeclSec() :
 void paramDecls() :
 {}
 {
-  paramDecl() [paramDecls2()]
+  paramDecl() {sa.rs(12,null);} [paramDecls2()]
 }
 
 void paramDecls2() :
 {}
 {
-  paramDecl() [paramDecls2()] 
+  paramDecl() {sa.rs(12,null);} [paramDecls2()] 
 }
 
 void paramDecl() :
-{}
-{  dataType() < IDENTIFIER > < SEMICOLON >
-| < VAR > dataType() < IDENTIFIER >
+{ Token t; }
+{  t=dataType() {sa.rs(13,t);} t=< IDENTIFIER > {sa.rs(0,t); sa.rs(3,t); sa.rs(14,t);} < SEMICOLON >
+| < VAR > t=dataType() {sa.rs(13,t);} t=< IDENTIFIER > {sa.rs(0,t); sa.rs(3,t); sa.rs(14,t);}
 }
 
 void functionDecl() :
@@ -268,14 +268,14 @@ void functionDecl() :
 }
 
 void functionHeader() :
-{}
-{  < FUNCTION > < IDENTIFIER > <RETURNS > dataType() < SEMICOLON >
+{ Token t; }
+{  < FUNCTION > t=< IDENTIFIER > {sa.rs(0,t); sa.rs(3,t); sa.rs(15,t);} <RETURNS > t=dataType() {sa.rs(16,t);} < SEMICOLON >
 }
 
 void functionBlock() :
 {}
 {
-	< BEGIN > functionStatements() < END >
+	< BEGIN > functionStatements() < END > {sa.rs(17,null);}
 }
 
 void functionStatements() :
@@ -292,14 +292,14 @@ void statements() :
 }
 
 void statement() :
-{}
+{ Token t; }
 {  < READ > variable()
 | < SET > variable() < EQUAL > expression()
 | < WRITE > variable()
 | < IF > condition() < THEN > statements() elseClause()
 | < WHILE > condition() < DO > statements() < ENDWHILE >
 | < UNTIL > condition() < DO > statements() < ENDUNTIL >
-| < CALL > < IDENTIFIER > [argList()]
+| < CALL > t=< IDENTIFIER > {sa.rs(2,t); sa.rs(20,t);} [argList()]
 }
 
 void elseClause() :{}
@@ -320,13 +320,13 @@ void argList() :
 void arguments() :
 {}
 {
-  argument() [arguments2()]
+  argument() {sa.rs(27,null);} [arguments2()] {sa.rs(28,null);}
 }
 
 void arguments2() :
 {}
 {
-  < COMMA > argument() [arguments2()]
+  < COMMA > argument() {sa.rs(27,null);} [arguments2()]
 }
 
 void condition() :
@@ -391,19 +391,19 @@ void unary() :
 }
 
 void factor() :
-{}
+{ Token t; }
 {
-  < IDENTIFIER > (argList() | variableNI())
-| < INTEGER_LITERAL >
-| < REAL_LITERAL >
-| < STRING_LITERAL >
+  t=< IDENTIFIER > {sa.rs(2,t);} ( {sa.rs(19,t);} argList() | {sa.rs(23,t);} variableNI())
+| t=< INTEGER_LITERAL > {sa.rs(21,t);}
+| t=< REAL_LITERAL > {sa.rs(21,t);}
+| t=< STRING_LITERAL > {sa.rs(22,t);}
 | < NOT > factor()
 | < PARENT_OPEN > condition() < PARENT_CLOSE >
 }
 
 void variableNI() :
 {}
-{  [< BRACKETS_OPEN > expression() < BRACKETS_CLOSE >] [variable2()]
+{  [< BRACKETS_OPEN > {sa.rs(25,null);} expression() < BRACKETS_CLOSE >] [variable2()]
 }
 
 void variable() :
@@ -413,9 +413,9 @@ void variable() :
 }
 
 void variable2() :
-{}
+{ Token t; }
 {
-  < DOT > variable()
+  < DOT > t=< IDENTIFIER > {sa.rs(26,t);sa.rs(23,t);} [< BRACKETS_OPEN > {sa.rs(25,null);} expression() < BRACKETS_CLOSE >] [variable2()]
 }
 
 void relOp() :

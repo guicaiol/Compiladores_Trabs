@@ -25,6 +25,13 @@ public class SemanticAnalyser {
 	// DataType storage
 	Reference currentDataType;
 	
+	// Record checking
+	Reference lastVariable;
+	
+	// ArgList number of parameters checking
+	Reference lastProcFunc;
+	int procFuncArgList = 0;
+	
 	public SemanticAnalyser() {
 
 	}
@@ -55,9 +62,9 @@ public class SemanticAnalyser {
 				refIdentifier.type = st.search(newType);
 			} break;
 			
-			case 2: { // Check if identifier type is not declared
+			case 2: { // Check if identifier is not declared
 				if(!st.isDeclared(id, currentLevel))
-					error("Tipo '"+id+"' não definido", t);
+					error("Identicador '"+id+"' não definido", t);
 			} break;
 
 			case 3: { // Declare identifier (add to ST)
@@ -72,7 +79,7 @@ public class SemanticAnalyser {
 				refIdentifier.level = currentLevel;
 			} break;
 
-			case 4: { // Check if identifier is a type
+			case 4: { // Check if identifier is a TYPE
 				Reference ref = st.search(id);
 				if(ref.category!=Category.TYPE)
 					error("Identificador "+id+" não é um tipo", t);
@@ -125,20 +132,21 @@ public class SemanticAnalyser {
 				refIdentifier.category = Category.PROCEDURE;
 				refIdentifier.numParameters = 0;
 				
+				lastProcFunc = refIdentifier;
+				
 				// Inc level
 				currentLevel++;
-				// TODO: lembrar de descer o nivel HHHHHHHHHHHHHHHHHHHHHHHHHHH
 			} break;
 			
 			case 12: { // Increment procedure parameters number
-				refIdentifier.numParameters++;		
+				lastProcFunc.numParameters++;		
 			} break;
 			
 			case 13: { // Store DataType for variable/parameter definition
 				currentDataType = st.search(id);
 			} break;
 			
-			case 14: { // Set DataType (saved) to parameter
+			case 14: { // Set DataType (saved) category to parameter
 				refIdentifier.category = Category.PARAMETER;
 				refIdentifier.type = currentDataType;
 			} break;
@@ -147,19 +155,95 @@ public class SemanticAnalyser {
 				refIdentifier.category = Category.FUNCTION;
 				refIdentifier.numParameters = 0;
 				
+				lastProcFunc = refIdentifier;
+				
 				// Inc level
 				currentLevel++;
-				// TODO: lembrar de descer o nivel HHHHHHHHHHHHHHHHHHHHHHHHHHH
 			} break;
 			
 			case 16: { // Set DataType (current id) to current identifier
 				refIdentifier.type = st.search(id);
 			} break;
 			
-			case 17: {
-				// TODO: continuar a partir de Block e FunctionBlock
+			case 17: { // Decrement level, end of block
+				currentLevel--;
+			} break;
+
+			case 18: { // Check if identifier is a PROCEDURE
+				Reference ref = st.search(id);
+				if(ref.category!=Category.PROCEDURE)
+					error("Identificador "+id+" não é um procedimento", t);
+				else {
+					lastProcFunc = ref;
+					procFuncArgList = 0;
+				}
 			} break;
 			
+			case 19: { // Check if identifier is a FUNCTION
+				Reference ref = st.search(id);
+				if(ref.category!=Category.FUNCTION)
+					error("Identificador "+id+" não é uma função", t);
+				else {
+					lastProcFunc = ref;
+					procFuncArgList = 0;
+				}
+			} break;
+			
+			case 20: { // Check if identifier is a FUNCTION or PROCEDURE
+				Reference ref = st.search(id);
+				if(ref.category!=Category.FUNCTION && ref.category!=Category.PROCEDURE)
+					error("Identificador '"+id+"' não é um procedimento ou função", t);
+				else {
+					lastProcFunc = ref;
+					procFuncArgList = 0;
+				}
+			} break;
+			
+			case 21: { // Check numeric literal
+				Integer intValue = Integer.valueOf(id);
+				long maxInt = (long)Math.pow(2, 31)-1;
+				if(Math.abs(intValue) > maxInt)
+					error("Overflow de inteiro (max: "+maxInt+")", t);
+			} break;
+			
+			case 22: { // Check string literal
+				if(id.length() > 255)
+					error("Overflow de string (max 255 caracteres)", t);
+			} break;
+			
+			case 23: { // Check if identifier is a VARIABLE
+				Reference ref = st.search(id);
+				if(ref.category!=Category.VARIABLE)
+					error("Identificador '"+id+"' não é uma variável", t);
+				else {
+					lastVariable = ref;
+				}
+			} break;
+			
+			case 24: { // Set current identifier category: VARIABLE 
+				refIdentifier.category = Category.VARIABLE;
+			} break;
+			
+			case 25: { // Check if variable is an array type
+				if(!lastVariable.id.contains("array"))
+					error("Identificador '"+lastVariable.id+"' não é um array", t);
+			} break;
+			
+			case 26: { // Check if record variable identifier is valid
+				String recordVariableId = lastVariable.type.id + id;
+				Reference ref = st.search(recordVariableId);
+				if(ref==null)
+					error("Acessando membro do record '"+recordVariableId+"' não definido", t);
+			} break;
+			
+			case 27: { // Increment number of parameters in ArgList
+				procFuncArgList++;
+			} break;
+			
+			case 28: { // Check if ArgList parameters is equal to func/proc numParameters
+				if(lastProcFunc.numParameters!=procFuncArgList)
+					error("Procedimento ou função chamado com número incorreto de parâmetros; entrada: "+procFuncArgList+", esperado: "+lastProcFunc.numParameters, t);
+			} break;
 				
 		}
 	}

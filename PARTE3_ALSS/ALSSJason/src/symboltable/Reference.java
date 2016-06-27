@@ -4,6 +4,7 @@ import symboltable.Category;
 
 public class Reference {
 	
+	public String id;
 	public int level;
 	public Category category;
 	public Reference type;
@@ -14,7 +15,9 @@ public class Reference {
 	public int numParameters;
 	public int arraySize;
 	
-	public Reference() {
+	public Reference(String id) {
+		this.id = id;
+		
 		level = 0;
 		category = Category.UNDEFINED;
 		type = null;
