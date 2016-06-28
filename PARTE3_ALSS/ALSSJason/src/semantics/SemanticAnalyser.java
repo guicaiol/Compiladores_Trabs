@@ -66,7 +66,8 @@ public class SemanticAnalyser {
 			} break;
 			
 			case 2: { // Check if identifier is not declared
-				if(!st.isDeclared(id, currentLevel))
+				Reference ref = st.search(id);
+				if(ref==null)
 					error("Identicador '"+id+"' não definido", t);
 			} break;
 
@@ -86,12 +87,13 @@ public class SemanticAnalyser {
 				Reference ref = st.search(id);
 				if(ref!=null) {
 					if(ref.category!=Category.TYPE)
-						error("Identificador "+id+" não é um tipo", t);
+						error("Identificador '"+id+"' não é um tipo", t);
 				}
 			} break;
 
 			case 5: { // Create array and set type to identifier
-				currentArray.type = st.search(id);
+				if(currentArray!=null)
+					currentArray.type = st.search(id);
 			} break;
 
 			case 6: { // Check array numeric literal size
@@ -190,7 +192,7 @@ public class SemanticAnalyser {
 				Reference ref = st.search(id);
 				if(ref!=null) {
 					if(ref.category!=Category.PROCEDURE)
-						error("Identificador "+id+" não é um procedimento", t);
+						error("Identificador '"+id+"' não é um procedimento", t);
 					else {
 						lastProcFunc = ref;
 						procFuncArgList = 0;
@@ -202,7 +204,7 @@ public class SemanticAnalyser {
 				Reference ref = st.search(id);
 				if(ref!=null) {
 					if(ref.category!=Category.FUNCTION)
-						error("Identificador "+id+" não é uma função", t);
+						error("Identificador '"+id+"' não é uma função", t);
 					else {
 						lastProcFunc = ref;
 						procFuncArgList = 0;
@@ -258,10 +260,12 @@ public class SemanticAnalyser {
 			} break;
 			
 			case 26: { // Check if record variable identifier is valid
-				String recordVariableId = lastVariable.type.id + id;
-				Reference ref = st.search(recordVariableId);
-				if(ref==null)
-					error("Acessando membro do record '"+recordVariableId+"' não definido", t);
+				if(lastVariable!=null && lastVariable.type!=null && lastVariable.type.type!=null) {
+					String recordVariableId = lastVariable.type.type.id + "." + id;
+					Reference ref = st.search(recordVariableId);
+					if(ref==null)
+						error("Acessando membro do record '"+id+"' não definido", t);
+				}
 			} break;
 			
 			case 27: { // Increment number of parameters in ArgList
@@ -273,8 +277,13 @@ public class SemanticAnalyser {
 					error("Procedimento ou função chamado com número incorreto de parâmetros; entrada: "+procFuncArgList+", esperado: "+lastProcFunc.numParameters, t);
 			} break;
 			
-			/// TODO: Check "var1.var2", where var1 needs to be a record
-			/// TODO: Check array bounds on access
+			case 29: { // Check if variable is an record type
+				if(lastVariable==null ||
+				   (lastVariable!=null && lastVariable.type==null) ||
+				   (lastVariable.type!=null && lastVariable.type.type==null) ||
+				   (lastVariable.type.type!=null && !lastVariable.type.type.id.contains("record")))
+					error("Identificador '"+lastVariable.id+"' não é um record", t);
+			} break;
 		}
 		
 	}

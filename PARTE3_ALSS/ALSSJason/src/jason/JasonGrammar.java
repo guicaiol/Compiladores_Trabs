@@ -800,12 +800,13 @@ public class JasonGrammar implements JasonGrammarConstants {
   static final public void variable2() throws ParseException {
   Token t;
     jj_consume_token(DOT);
+           sa.rs(29,null);
     t = jj_consume_token(IDENTIFIER);
-                            sa.rs(26,t);sa.rs(23,t);
+                                              sa.rs(26,t);sa.rs(23,t);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case BRACKETS_OPEN:
       jj_consume_token(BRACKETS_OPEN);
-                                                                          sa.rs(25,null);
+                                                                                            sa.rs(25,null);
       expression();
       jj_consume_token(BRACKETS_CLOSE);
       break;

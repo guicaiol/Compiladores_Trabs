@@ -415,7 +415,7 @@ void variable() :
 void variable2() :
 { Token t; }
 {
-  < DOT > t=< IDENTIFIER > {sa.rs(26,t);sa.rs(23,t);} [< BRACKETS_OPEN > {sa.rs(25,null);} expression() < BRACKETS_CLOSE >] [variable2()]
+  < DOT > {sa.rs(29,null);} t=< IDENTIFIER > {sa.rs(26,t);sa.rs(23,t);} [< BRACKETS_OPEN > {sa.rs(25,null);} expression() < BRACKETS_CLOSE >] [variable2()]
 }
 
 void relOp() :
