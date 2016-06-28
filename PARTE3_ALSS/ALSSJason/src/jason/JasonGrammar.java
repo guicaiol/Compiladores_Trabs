@@ -14,7 +14,7 @@ public class JasonGrammar implements JasonGrammarConstants {
                 while(true) {
                         try {
                                 if(parser.program()==0) {
-                                        System.out.println("SUCESSO!");
+                                        System.out.println("Fim na an\u00e1lise sem\u00e2ntica.");
                                         break;
                                 }
                         } catch (Exception e) {

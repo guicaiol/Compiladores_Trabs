@@ -40,12 +40,16 @@ public class SemanticAnalyser {
 	public void rs(int n, Token t) {
 		final String id = (t!=null)? t.image : "unknown";
 		
-		//System.out.println("rs("+n+") ");
+		//System.out.println("rs("+n+")");
 		
 		// Switch semantic routine number
 		switch(n) {
 			case 0: { // Check if identifier is already declared
-				if(st.isDeclared(id, currentLevel))
+				String idName = id;
+				if(definingRecord)
+					idName = currentRecordId+"."+id;
+				
+				if(st.isDeclared(idName, currentLevel))
 					error("Identificador '"+id+"' já declarado", t);
 			} break;
 
@@ -249,6 +253,7 @@ public class SemanticAnalyser {
 			} break;
 			
 			/// TODO: Check "var1.var2", where var1 needs to be a record
+			/// TODO: Check array bounds on access
 		}
 		
 	}
