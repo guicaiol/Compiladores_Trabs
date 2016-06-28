@@ -84,8 +84,10 @@ public class SemanticAnalyser {
 
 			case 4: { // Check if identifier is a TYPE
 				Reference ref = st.search(id);
-				if(ref.category!=Category.TYPE)
-					error("Identificador "+id+" não é um tipo", t);
+				if(ref!=null) {
+					if(ref.category!=Category.TYPE)
+						error("Identificador "+id+" não é um tipo", t);
+				}
 			} break;
 
 			case 5: { // Create array and set type to identifier
@@ -103,8 +105,9 @@ public class SemanticAnalyser {
 				}
 			} break;
 
-			case 7: { // Set array size to current array 
-				currentArray.arraySize = Integer.valueOf(id);
+			case 7: { // Set array size to current array
+				if(currentArray!=null)
+					currentArray.arraySize = Integer.valueOf(id);
 			} break;
 			
 			case 8: { // Create record type
@@ -123,17 +126,20 @@ public class SemanticAnalyser {
 				refIdentifier.type = st.search(newType);
 			} break;
 			
-			case 9: { // Set current identifier category: TYPE 
-				refIdentifier.category = Category.TYPE;
+			case 9: { // Set current identifier category: TYPE
+				if(refIdentifier!=null)
+					refIdentifier.category = Category.TYPE;
 			} break;
 			
 			case 10: { // End record definition 
 				definingRecord = false;
 			} break;
 			
-			case 11: { // Set current identifier category: PROCEDURE 
-				refIdentifier.category = Category.PROCEDURE;
-				refIdentifier.numParameters = 0;
+			case 11: { // Set current identifier category: PROCEDURE
+				if(refIdentifier!=null) {
+					refIdentifier.category = Category.PROCEDURE;
+					refIdentifier.numParameters = 0;
+				}
 				
 				lastProcFunc = refIdentifier;
 				
@@ -142,7 +148,8 @@ public class SemanticAnalyser {
 			} break;
 			
 			case 12: { // Increment procedure parameters number
-				lastProcFunc.numParameters++;		
+				if(lastProcFunc!=null)
+					lastProcFunc.numParameters++;		
 			} break;
 			
 			case 13: { // Store DataType for variable/parameter definition
@@ -150,13 +157,17 @@ public class SemanticAnalyser {
 			} break;
 			
 			case 14: { // Set DataType (saved) category to parameter
-				refIdentifier.category = Category.PARAMETER;
-				refIdentifier.type = currentDataType;
+				if(refIdentifier!=null) {
+					refIdentifier.category = Category.PARAMETER;
+					refIdentifier.type = currentDataType;
+				}
 			} break;
 			
 			case 15: { // Set current identifier category: FUNCTION
-				refIdentifier.category = Category.FUNCTION;
-				refIdentifier.numParameters = 0;
+				if(refIdentifier!=null) {
+					refIdentifier.category = Category.FUNCTION;
+					refIdentifier.numParameters = 0;
+				}
 				
 				lastProcFunc = refIdentifier;
 				
@@ -177,31 +188,37 @@ public class SemanticAnalyser {
 
 			case 18: { // Check if identifier is a PROCEDURE
 				Reference ref = st.search(id);
-				if(ref.category!=Category.PROCEDURE)
-					error("Identificador "+id+" não é um procedimento", t);
-				else {
-					lastProcFunc = ref;
-					procFuncArgList = 0;
+				if(ref!=null) {
+					if(ref.category!=Category.PROCEDURE)
+						error("Identificador "+id+" não é um procedimento", t);
+					else {
+						lastProcFunc = ref;
+						procFuncArgList = 0;
+					}
 				}
 			} break;
 			
 			case 19: { // Check if identifier is a FUNCTION
 				Reference ref = st.search(id);
-				if(ref.category!=Category.FUNCTION)
-					error("Identificador "+id+" não é uma função", t);
-				else {
-					lastProcFunc = ref;
-					procFuncArgList = 0;
+				if(ref!=null) {
+					if(ref.category!=Category.FUNCTION)
+						error("Identificador "+id+" não é uma função", t);
+					else {
+						lastProcFunc = ref;
+						procFuncArgList = 0;
+					}
 				}
 			} break;
 			
 			case 20: { // Check if identifier is a FUNCTION or PROCEDURE
 				Reference ref = st.search(id);
-				if(ref.category!=Category.FUNCTION && ref.category!=Category.PROCEDURE)
-					error("Identificador '"+id+"' não é um procedimento ou função", t);
-				else {
-					lastProcFunc = ref;
-					procFuncArgList = 0;
+				if(ref!=null) {
+					if(ref.category!=Category.FUNCTION && ref.category!=Category.PROCEDURE)
+						error("Identificador '"+id+"' não é um procedimento ou função", t);
+					else {
+						lastProcFunc = ref;
+						procFuncArgList = 0;
+					}
 				}
 			} break;
 			
@@ -219,20 +236,24 @@ public class SemanticAnalyser {
 			
 			case 23: { // Check if identifier is a VARIABLE
 				Reference ref = st.search(id);
-				if(ref.category!=Category.VARIABLE)
-					error("Identificador '"+id+"' não é uma variável", t);
-				else {
-					lastVariable = ref;
+				if(ref!=null) {
+					if(ref.category!=Category.VARIABLE)
+						error("Identificador '"+id+"' não é uma variável", t);
+					else {
+						lastVariable = ref;
+					}
 				}
 			} break;
 			
-			case 24: { // Set current identifier category: VARIABLE 
-				refIdentifier.category = Category.VARIABLE;
-				refIdentifier.type = currentDataType;
+			case 24: { // Set current identifier category: VARIABLE
+				if(refIdentifier!=null) {
+					refIdentifier.category = Category.VARIABLE;
+					refIdentifier.type = currentDataType;
+				}
 			} break;
 			
 			case 25: { // Check if variable is an array type
-				if(!lastVariable.type.type.id.contains("array"))
+				if(lastVariable!=null && !lastVariable.type.type.id.contains("array"))
 					error("Identificador '"+lastVariable.id+"' não é um array", t);
 			} break;
 			
@@ -248,7 +269,7 @@ public class SemanticAnalyser {
 			} break;
 			
 			case 28: { // Check if ArgList parameters is equal to func/proc numParameters
-				if(lastProcFunc.numParameters!=procFuncArgList)
+				if(lastProcFunc!=null && lastProcFunc.numParameters!=procFuncArgList)
 					error("Procedimento ou função chamado com número incorreto de parâmetros; entrada: "+procFuncArgList+", esperado: "+lastProcFunc.numParameters, t);
 			} break;
 			
